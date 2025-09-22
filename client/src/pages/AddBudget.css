@@ -1,0 +1,198 @@
+/* --- Add Budget Container Styles (Modern & Clean) --- */
+
+/* Container */
+.add-budget-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 30px 35px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #000000;
+  text-align: left;
+  transition: box-shadow 0.3s ease;
+}
+
+.add-budget-container:hover {
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+/* Headings */
+.add-budget-container h2 {
+  color: #2563eb;
+  font-weight: 700;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 2.25rem;
+ 
+}
+
+.add-budget-container h3 {
+  color: #2196f3;
+  font-weight: 700;
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  letter-spacing: 0.01em;
+}
+
+/* Budget Form */
+.budget-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 60px;
+}
+
+.budget-form label {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #000000;
+  display: block;
+  font-size: 1.4rem;
+  user-select: none;
+}
+
+.budget-form input,
+.budget-form select,
+.budget-form textarea {
+  width: 97%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.8px solid #ddd;
+  font-size: 1.2rem;
+  font-family: area, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #000000;
+  resize: vertical;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.budget-form input::placeholder,
+.budget-form textarea::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.budget-form input:focus,
+.budget-form select:focus,
+.budget-form textarea:focus {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.6);
+  background-color: #f0f7ff;
+}
+
+/* Buttons */
+.budget-form button,
+.expense-form button {
+  background: linear-gradient(90deg, #2196f3);
+  color: #fff;
+  font-weight: 700;
+  padding: 16px 0;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.25rem;
+  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.2s ease;
+  user-select: none;
+  box-shadow: 0 6px 16px rgba(33, 96, 243, 0.45);
+  letter-spacing: 0.02em;
+}
+
+.budget-form button:hover,
+.expense-form button:hover {
+  background: linear-gradient(90deg, #1976d2);
+  box-shadow: 0 8px 20px rgba(17, 82, 147, 0.75);
+  transform: translateY(-2px);
+}
+
+.budget-form button:active,
+.expense-form button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(17, 82, 147, 0.6);
+}
+
+/* Expense Form */
+.expense-form {
+  max-width: 100%;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.expense-form label {
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #000000;
+  display: block;
+  font-size: 1.5rem;
+  user-select: none;
+}
+
+.expense-form input,
+.expense-form textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.8px solid #ddd;
+  font-size: 1.05rem;
+  font-family: inherit;
+  color: #444;
+  resize: vertical;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.expense-form input::placeholder,
+.expense-form textarea::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+.expense-form input:focus,
+.expense-form textarea:focus {
+  border-color: #2196f3;
+  outline: none;
+  box-shadow: 0 0 12px rgba(33, 150, 243, 0.6);
+  background-color: #f0f7ff;
+}
+
+.expense-form button {
+  align-self: flex-start;
+  padding-left: 44px;
+  padding-right: 44px;
+  user-select: none;
+  box-shadow: 0 6px 16px rgba(0, 255, 255, 0.45);
+  letter-spacing: 0.02em;
+}
+
+.expense-form button:hover {
+  background: linear-gradient(90deg, #1976d2, #115293);
+  box-shadow: 0 8px 20px rgba(17, 82, 147, 0.75);
+  transform: translateY(-2px);
+}
+
+.expense-form button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(17, 82, 147, 0.6);
+}
+
+/* Responsive tweaks */
+@media (max-width: 480px) {
+  .add-budget-container {
+    padding: 25px 20px;
+  }
+
+  .budget-form,
+  .expense-form {
+    gap: 16px;
+  }
+
+  .budget-form button,
+  .expense-form button {
+    font-size: 1.1rem;
+    padding: 14px 0;
+  }
+}

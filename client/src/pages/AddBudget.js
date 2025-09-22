@@ -1,0 +1,391 @@
+// pages/AddBudget.js
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './AddBudget.css';  // <-- Import CSS here
+
+const AddBudget = () => {
+  // Budget form state
+  const [form, setForm] = useState({
+    id: Date.now(),
+    name: '',
+    description: '',
+    amount: '',
+    currency: 'USD',
+    category: 'Food',
+    startDate: '',
+    endDate: '',
+  });
+
+  // Expense form state
+  const [expense, setExpense] = useState({
+    title: '',
+    amount: '',
+    date: '',
+    notes: '',
+  });
+
+  const [expenses, setExpenses] = useState([]);
+  const navigate = useNavigate();
+
+  // Load stored expenses
+  useEffect(() => {
+    const storedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
+    setExpenses(storedExpenses);
+  }, []);
+
+  // Handle budget form changes
+  const handleBudgetChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  // Handle expense form changes
+  const handleExpenseChange = (e) => {
+    setExpense({ ...expense, [e.target.name]: e.target.value });
+  };
+
+  // Submit budget form (with override by category)
+  const handleBudgetSubmit = async (e) => {
+    e.preventDefault();
+
+    let budgets = JSON.parse(localStorage.getItem('budgets')) || [];
+
+    // Check if category exists locally
+    const categoryIndex = budgets.findIndex((b) => b.category === form.category);
+
+    if (categoryIndex !== -1) {
+      // Update existing budget locally
+      budgets[categoryIndex].amount = parseFloat(budgets[categoryIndex].amount) + parseFloat(form.amount);
+      budgets[categoryIndex].name = form.name.trim();
+      budgets[categoryIndex].description = form.description.trim();
+      budgets[categoryIndex].currency = form.currency;
+      budgets[categoryIndex].startDate = form.startDate;
+      budgets[categoryIndex].endDate = form.endDate;
+    } else {
+      // Add new budget locally
+      const newBudget = {
+        ...form,
+        id: Date.now(),
+        amount: parseFloat(form.amount),
+        name: form.name.trim(),
+        description: form.description.trim(),
+      };
+      budgets.push(newBudget);
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/budgets/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          description: form.description.trim(),
+          amount: parseFloat(form.amount),
+          currency: form.currency,
+          category: form.category,
+          startDate: form.startDate,
+          endDate: form.endDate,
+        }),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.error || "Failed to save budget to DB");
+      }
+
+      const data = await res.json();
+
+      // Sync localStorage with backend response
+      const updatedIndex = budgets.findIndex(b => b.category === data.category);
+      if (updatedIndex !== -1) {
+        budgets[updatedIndex] = {
+          ...budgets[updatedIndex],
+          amount: data.amount,  // ensure backend amount is synced
+        };
+      }
+
+      localStorage.setItem("budgets", JSON.stringify(budgets));
+
+      alert(`✅ Budget Saved Successfully! (${data.category}: ${data.amount})`);
+      console.log("Saved budget:", data);
+
+      // Reset form
+      setForm({
+        id: Date.now(),
+        name: '',
+        description: '',
+        amount: '',
+        currency: 'USD',
+        category: 'Food',
+        startDate: '',
+        endDate: '',
+      });
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`❌ Failed to save budget: ${error.message}`);
+    }
+  };
+
+  // Submit expense form
+  const handleExpenseSubmit = async (e) => {
+    e.preventDefault();
+
+    let budgets = JSON.parse(localStorage.getItem('budgets')) || [];
+    const budgetIndex = budgets.findIndex((b) => b.id === form.id);
+
+    if (budgetIndex === -1) {
+      alert("⚠ Budget not found!");
+      return;
+    }
+
+    const budget = budgets[budgetIndex];
+
+    // Calculate total spent for this budget
+    const totalSpent = expenses
+      .filter((exp) => exp.budgetId === budget.id)
+      .reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
+
+    const newTotal = totalSpent + parseFloat(expense.amount);
+
+    if (newTotal > parseFloat(budget.amount)) {
+      if (!window.confirm(`⚠ This expense exceeds your budget (${budget.amount}). Add anyway?`)) {
+        return;
+      }
+    }
+
+    const newExpense = {
+      ...expense,
+      id: Date.now(),
+      budgetId: budget.id,
+    };
+
+    try {
+      // Send expense to backend
+      const res = await fetch(`http://localhost:5000/api/expenses/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newExpense),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json();
+        throw new Error(errData?.error || "Failed to save expense to DB");
+      }
+
+      const savedExpense = await res.json();
+
+      // Update local state and localStorage
+      const updatedExpenses = [...expenses, savedExpense];
+      setExpenses(updatedExpenses);
+      localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
+
+      alert("✅ Expense Added Successfully!");
+      console.log("Saved expense:", savedExpense);
+
+      navigate("/dashboard"); // redirect after adding
+
+      // Reset expense form
+      setExpense({
+        title: '',
+        amount: '',
+        date: '',
+        notes: '',
+      });
+
+    } catch (error) {
+      console.error("Error:", error);
+      alert(`❌ Failed to save expense: ${error.message}`);
+    }
+  };
+
+  return (
+    <div className="add-budget-container">
+      {/* Budget Form */}
+      <form onSubmit={handleBudgetSubmit} className="budget-form">
+        <h2>💼 Add Budget</h2>
+
+        <label>Budget Name</label>
+        <input
+          name="name"
+          placeholder="Budget Name"
+          value={form.name}
+          onChange={handleBudgetChange}
+          required
+        />
+
+        <label>Budget Description (optional)</label>
+        <textarea
+          name="description"
+          placeholder="Budget Description (optional)"
+          value={form.description}
+          onChange={handleBudgetChange}
+        />
+
+        <label>Total Amount</label>
+        <input
+          name="amount"
+          type="number"
+          placeholder="Total Amount"
+          value={form.amount}
+          onChange={handleBudgetChange}
+          required
+        />
+
+        <label>Currency:</label>
+        <select
+          name="currency"
+          value={form.currency}
+          onChange={handleBudgetChange}
+          required
+        >
+          <option value="USD">USD ($)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="JPY">JPY (¥)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CAD">CAD (C$)</option>
+          <option value="CNY">CNY (¥)</option>
+          <option value="SGD">SGD (S$)</option>
+          <option value="AED">AED (د.إ)</option>
+          <option value="CHF">CHF (CHF)</option>
+          <option value="ZAR">ZAR (R)</option>
+          <option value="NZD">NZD (NZ$)</option>
+          <option value="HKD">HKD (HK$)</option>
+          <option value="SEK">SEK (kr)</option>
+          <option value="NOK">NOK (kr)</option>
+          <option value="DKK">DKK (kr)</option>
+          <option value="KRW">KRW (₩)</option>
+          <option value="THB">THB (฿)</option>
+          <option value="MYR">MYR (RM)</option>
+          <option value="PHP">PHP (₱)</option>
+          <option value="IDR">IDR (Rp)</option>
+          <option value="VND">VND (₫)</option>
+          <option value="PKR">PKR (₨)</option>
+          <option value="BDT">BDT (৳)</option>
+          <option value="SAR">SAR (﷼)</option>
+          <option value="KWD">KWD (د.ك)</option>
+          <option value="BHD">BHD (ب.د)</option>
+          <option value="QAR">QAR (ر.ق)</option>
+        </select>
+
+        <label>Category:</label>
+        <select
+          name="category"
+          value={form.category}
+          onChange={handleBudgetChange}
+          required
+        >
+          <option value="Food">Food</option>
+          <option value="Housing">Housing</option>
+          <option value="Transport">Transport</option>
+          <option value="Utilities">Utilities</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Education">Education</option>
+          <option value="Savings">Savings</option>
+          <option value="Travel">Travel</option>
+          <option value="Clothing">Clothing</option>
+          <option value="Groceries">Groceries</option>
+          <option value="Electricity">Electricity</option>
+          <option value="Dining Out">Dining Out</option>
+          <option value="Fuel">Fuel</option>
+          <option value="Public Transport">Public Transport</option>
+          <option value="Rent">Rent</option>
+          <option value="Mortgage">Mortgage</option>
+          <option value="Water">Water</option>
+          <option value="Internet">Internet</option>
+          <option value="Phone">Phone</option>
+          <option value="Streaming Services">Streaming Services</option>
+          <option value="Movies & Events">Movies & Events</option>
+          <option value="Gaming">Gaming</option>
+          <option value="Medical Bills">Medical Bills</option>
+          <option value="Pharmacy">Pharmacy</option>
+          <option value="School Fees">School Fees</option>
+          <option value="Books & Supplies">Books & Supplies</option>
+          <option value="Investments">Investments</option>
+          <option value="Retirement">Retirement</option>
+          <option value="Flights">Flights</option>
+          <option value="Hotels">Hotels</option>
+          <option value="Shopping">Shopping</option>
+          <option value="Others">Others</option>
+        </select>
+
+        <label>Start Date:</label>
+        <input
+          name="startDate"
+          type="date"
+          value={form.startDate}
+          onChange={handleBudgetChange}
+          required
+        />
+
+        <label>End Date:</label>
+        <input
+          name="endDate"
+          type="date"
+          value={form.endDate}
+          onChange={handleBudgetChange}
+          required
+        />
+
+        <button type="submit">Add Budget</button>
+      </form>
+
+      {/* Uncomment below if you want to use Expense Form */}
+      {/*
+      <form
+        onSubmit={handleExpenseSubmit}
+        className="expense-form"
+        style={{ maxWidth: '450px', margin: '40px auto 0' }}
+      >
+        <h3>Add Expense</h3>
+
+        <label>Title</label>
+        <input
+          name="title"
+          placeholder="Expense Title"
+          value={expense.title}
+          onChange={handleExpenseChange}
+          required
+        />
+
+        <label>Amount</label>
+        <input
+          name="amount"
+          type="number"
+          placeholder="Expense Amount"
+          value={expense.amount}
+          onChange={handleExpenseChange}
+          required
+        />
+
+        <label>Date</label>
+        <input
+          name="date"
+          type="date"
+          value={expense.date}
+          onChange={handleExpenseChange}
+          required
+        />
+
+        <label>Notes (optional)</label>
+        <textarea
+          name="notes"
+          placeholder="Notes"
+          value={expense.notes}
+          onChange={handleExpenseChange}
+        />
+
+        <button type="submit">Add Expense</button>
+      </form>
+      */}
+    </div>
+  );
+};
+
+export default AddBudget;

@@ -1,0 +1,1060 @@
+
+.dashboard-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding: 40px 20px;
+  background-color: #f4f6f8;
+  min-height: 100vh;
+  color: #333;
+}
+
+.dark-mode .dashboard-container {
+  background-color: #1e1e1e;
+  color: #ddd;
+}
+
+.dashboard-welcome {
+  background: linear-gradient(135deg, #2196f3, #21cbf3);
+  padding: 60px 20px;
+  color: rgb(0, 0, 0);
+  border-radius: 12px;
+  margin-bottom: 40px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.dashboard-welcome h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.dashboard-welcome h2 {
+  font-size: 1.5rem;
+  font-weight: 400;
+  color: #000000;
+}
+.dashboard-welcome .username {
+  color: #000000; /* highlight username */
+}
+
+
+
+.dashboard-welcome .date-message {
+  font-size: 1.15rem;
+  color: #000000;
+ 
+}
+/* ===== Action Buttons Feature Cards Container ===== */
+.action-buttons-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+/* ===== Feature Card Styling ===== */
+.feature-card {
+  background-color: white;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  flex: 1 1 220px;
+  max-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  color: #2c3e50;
+}
+
+.feature-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+/* ===== Buttons inside Feature Cards ===== */
+.feature-card .action-button {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.feature-card .action-button:hover {
+  background-color: #1976d2;
+  transform: scale(1.03);
+}
+/* Container for net summary cards */
+.net-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Each Net Card */
+.net-card {
+  background: linear-gradient(145deg, #ffffff);
+  flex: 1 1 180px;
+  padding: 22px 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.502);
+  text-align: center;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
+  cursor: default;
+}
+
+/* Hover effect */
+.net-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18), 0 0 8px rgba(33, 150, 243, 0.1);
+  background: linear-gradient(145deg, #ffffff, #ffffff);
+}
+
+/* Dark Mode */
+.dark-mode .net-card {
+  background: linear-gradient(145deg, #2b2b2b, #1f1f1f);
+  color: #ddd;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.4), inset 0 -2px 6px rgba(255,255,255,0.05);
+}
+
+.dark-mode .net-card:hover {
+  background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.6), 0 0 10px rgba(100, 181, 246, 0.2);
+}
+
+/* Card Heading */
+.net-card h4 {
+  font-size: 1.5rem;
+  margin-bottom: 12px;
+  font-weight: 600;
+  color: #2196f3;
+  letter-spacing: 0.5px;
+
+}
+
+.dark-mode .net-card h4 {
+  color: #64b5f6;
+}
+
+/* Card Amount */
+.net-card p {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e1e1e;
+  margin: 0;
+  background: linear-gradient(90deg, black);
+ 
+  -webkit-text-fill-color: transparent;
+}
+
+.dark-mode .net-card p {
+  background: linear-gradient(90deg, black);
+
+  -webkit-text-fill-color: transparent;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .net-cards-container {
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .net-card {
+    flex: 1 1 85%;
+  }
+}
+
+@media (max-width: 480px) {
+  .net-card {
+    padding: 18px 14px;
+  }
+
+  .net-card p {
+    font-size: 1.15rem;
+  }
+
+  .net-card h4 {
+    font-size: 1rem;
+  }
+}
+
+/* ===== Dark Mode Support ===== */
+.dark-mode .feature-card {
+  background-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.dark-mode .feature-card h3 {
+  color: #ddd;
+}
+
+.dark-mode .feature-card p {
+  color: #bbb;
+}
+
+.dark-mode .feature-card .action-button {
+  background-color: #2196f3;
+}
+
+.dark-mode .feature-card .action-button:hover {
+  background-color: #1976d2;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .action-buttons-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-card h3 { font-size: 1.1rem; }
+  .feature-card p { font-size: 0.85rem; }
+  .feature-card .action-button { font-size: 0.85rem; padding: 8px 14px; }
+}
+/* ===== PDF Report Feature Card ===== */
+.feature-card.pdf-report-card .action-button {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s, transform 0.2s;
+  display: block; /* important for nested button */
+  text-align: center;
+}
+
+.feature-card.pdf-report-card .action-button:hover {
+  background-color: #388e3c;
+  transform: scale(1.03);
+}
+
+.feature-card.pdf-report-card h3 {
+  margin-bottom: 10px;
+  font-size: 1.25rem;
+  color: #2c3e50;
+}
+
+.feature-card.pdf-report-card p {
+  color: #555;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+/* PDF Export Button */
+.pdf-export-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 16px 28px;       /* Bigger padding for larger button */
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  font-size: 1.1rem;        /* Larger text */
+  display: inline-block;
+}
+
+.pdf-export-button:hover {
+  background-color: #1976d2;
+  transform: scale(1.03);
+}
+
+/* Expense Summary Card */
+.feature-card.expense-summary-card {
+  background-color: white;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column; /* Column layout for heading + list */
+  gap: 12px;
+}
+
+/* Dark Mode */
+.dark-mode .feature-card.expense-summary-card {
+  background-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.feature-card.expense-summary-card h3.summary-title {
+  font-size: 1.4rem;
+  color: #2c3e50;
+  margin-bottom: 10px;
+}
+
+.dark-mode .feature-card.expense-summary-card h3.summary-title {
+  color: #ddd;
+}
+
+.feature-card.expense-summary-card ul.expense-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 8px;
+}
+
+.feature-card.expense-summary-card ul.expense-list li {
+  font-size: 1.05rem;
+  color: #555;
+}
+
+.dark-mode .feature-card.expense-summary-card ul.expense-list li {
+  color: #ccc;
+}
+
+.feature-card.expense-summary-card .alert {
+  color: #d32f2f;
+  font-weight: 600;
+  margin-top: 10px;
+}
+/* Expense Summary Section */
+.expense-summary {
+  margin-bottom: 40px;
+}
+
+.expense-summary .summary-title {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.dark-mode .expense-summary .summary-title {
+  color: #ddd;
+}
+
+/* Container for all cards */
+.expense-cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* Each Expense Card */
+.expense-card {
+  background-color: #ffffff;
+  flex: 1 1 140px; /* Flexible width with min 140px */
+  padding: 18px 16px;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.288);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-color: black;
+}
+
+.expense-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
+}
+
+/* Dark Mode */
+.dark-mode .expense-card {
+  background-color: #333;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+/* Card Heading */
+.expense-card h4 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+  color: #2196f3;
+}
+
+.dark-mode .expense-card h4 {
+  color: #64b5f6;
+}
+
+/* Card Amount */
+.expense-card p {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.dark-mode .expense-card p {
+  color: #ffffff;
+}
+
+/* Alert */
+.expense-summary .alert {
+  color: #d32f2f;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .expense-cards-container {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
+
+
+
+/* ===== Dark Mode Support ===== */
+.dark-mode .feature-card.pdf-report-card {
+  background-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.dark-mode .feature-card.pdf-report-card h3 {
+  color: #ddd;
+}
+
+.dark-mode .feature-card.pdf-report-card p {
+  color: #bbb;
+}
+
+.dark-mode .feature-card.pdf-report-card .action-button {
+  background-color: #4caf50;
+}
+
+.dark-mode .feature-card.pdf-report-card .action-button:hover {
+  background-color: #388e3c;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .feature-card.pdf-report-card {
+    max-width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .feature-card.pdf-report-card h3 { font-size: 1.1rem; }
+  .feature-card.pdf-report-card p { font-size: 0.85rem; }
+  .feature-card.pdf-report-card .action-button { font-size: 0.85rem; padding: 8px 14px; }
+}
+/* ===== OVERALL SUMMARY ===== */
+.overall-summary {
+  background-color: #ffffff;
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 32px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border:1px solid #000000;
+  height:fit-content;
+}
+
+.overall-summary:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.overall-summary .expense-summary {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #111827;
+ height: fit-content;
+
+  
+}
+
+.overall-summary p {
+  font-size: 1.5rem;
+  color: #000000;
+  
+}
+.recharts-tooltip-wrapper {
+  
+  font-size: 1.5rem !important;
+  background: #f9fafb !important;
+  border-radius: 6px !important;
+  border: 1px solid #000000 !important;
+  padding: 8px !important;
+  color: #111827 !important;
+}
+
+.recharts-legend-wrapper {
+  font-size: 1.2rem;
+  color: #374151;
+}
+
+.recharts-label-list text {
+  font-size: 1.25rem;
+  fill: #111827;
+  font-weight: 600;
+}
+
+/* Container for both charts */
+.expense-charts-container {
+  display: flex;
+  gap: 10px;             
+  margin-top: 32px;
+ 
+}
+
+/* Individual chart card */
+.chart-card {
+  background-color: #ffffff;
+       /* Each card takes ~50% width */
+  min-width: 660px;      /* Prevent too small on small screens */
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.chart-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Chart title */
+.chart-card h3.expense-summary {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: #111827;
+  text-align: center;
+}
+
+/* Chart card text */
+.chart-card p {
+  font-size: 1rem;
+  color: #374151;
+  text-align: center;
+}
+/* Debts & Loans Section */
+.debts {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  margin-bottom: 24px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.section-header h3 {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.add-btn {
+  background-color: #4caf50;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.add-btn:hover {
+  background-color: #45a049;
+}
+
+/* Table Styles */
+.debts-table-container {
+  overflow-x: auto;
+}
+
+.debts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.debts-table th,
+.debts-table td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.debts-table thead {
+  background-color: #f5f5f5;
+  border-bottom: 2px solid #ddd;
+}
+
+.debts-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.debts-table tbody tr:hover {
+  background-color: #f1f7ff;
+  transition: 0.3s;
+}
+
+/* Status Badges */
+.status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.status.paid {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status.remaining {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Payments Breakdown */
+.payment-breakdown {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: #f9f9f9;
+  border-left: 4px solid #4caf50;
+  border-radius: 8px;
+}
+
+.payment-breakdown ul {
+  padding-left: 20px;
+  margin-top: 8px;
+}
+
+.no-debts {
+  color: #777;
+  font-style: italic;
+}
+.recurring-expenses {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.recurring-expenses table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+}
+
+.recurring-expenses th, .recurring-expenses td {
+  padding: 12px 16px;
+  text-align: left;
+}
+
+.recurring-expenses tbody tr:hover {
+  background-color: #f1f7ff;
+  transition: 0.3s;
+}
+
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.status-auto { background-color: #d4edda; color: #155724; }
+.status-pending { background-color: #fff3cd; color: #856404; }
+.status-overdue { background-color: #f8d7da; color: #721c24; }
+
+/* Responsive: stack cards on mobile */
+@media (max-width: 768px) {
+  .chart-card {
+    flex: 1 1 100%;
+  }
+}
+
+.dark-mode .dashboard-welcome h2 {
+  color: #bbb;
+}
+
+.dark-mode-toggle {
+  display: block;
+  margin: 0 auto 30px auto;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.dark-mode-toggle:hover {
+  background-color: #1976d2;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.action-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: #1976d2;
+  transform: scale(1.03);
+}
+
+.expense-summary,
+.overall-summary,
+.budget-progress,
+.net-summary,
+.savings-goals,
+.debts,
+.recurring-expenses {
+  background-color: white;
+  padding: 30px 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  margin-bottom: 40px;
+}
+
+.dark-mode .expense-summary,
+.dark-mode .overall-summary,
+.dark-mode .budget-progress,
+.dark-mode .net-summary,
+.dark-mode .savings-goals,
+.dark-mode .debts,
+.dark-mode .recurring-expenses {
+  background-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.expense-summary h3,
+.overall-summary h3,
+.budget-progress h3,
+.net-summary h3,
+.savings-goals h3,
+.debts h3,
+.recurring-expenses h3 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+}
+
+.expense-summary ul,
+.net-summary ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.expense-summary ul li,
+.net-summary ul li {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.alert {
+  color: #d32f2f;
+  font-weight: 600;
+  margin-top: 15px;
+}
+
+.budget-card {
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+}
+
+.dark-mode .budget-card {
+  background-color: #333;
+  border-color: #444;
+}
+
+.savings-goals {
+  margin-top: 20px;
+  padding: 20px;
+}
+
+.goal-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  font-size: 1.25rem;
+}
+
+.goal-card:hover {
+  transform: translateY(-4px);
+}
+
+.progress-bar {
+  height: 16px;
+  background: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  margin: 10px 0;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 8px;
+  background: blue;
+  animation: fillAnimation 2s forwards;
+}
+
+.goal-card:hover .progress-bar-fill {
+  animation: none; /* Reset on hover */
+  width: 0%;
+  
+}
+.budget-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+
+
+.budget-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+
+@keyframes fillProgress {
+  from { width: 0%; }
+  to { width: var(--progress-width, 0%); }
+}
+
+/* Days Left Color Codes */
+.days-left.safe {
+  color: green;
+  font-weight: 600;
+}
+
+.days-left.warning {
+  color: orange;
+  font-weight: 600;
+}
+
+.days-left.urgent {
+  color: red;
+  font-weight: 700;
+}
+
+/* Motivation */
+.motivation {
+  font-style: italic;
+  margin-top: 6px;
+  color: #555;
+}
+
+/* Over-saved */
+.over-saved {
+  font-weight: bold;
+  color: #388e3c;
+}
+
+
+@keyframes fillAnimation {
+  from { width: 0%; }
+  to { width: var(--progress-width); }
+}
+
+.over-saved {
+  color: green;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+
+
+/* Keyframes */
+@keyframes fillAnimation {
+  from { width: 0; }
+  to { width: var(--progress-width, 0%); }
+}
+
+
+.debts-table-container {
+  overflow-x: auto;
+}
+
+.debts-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.debts-table th,
+.debts-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.dark-mode .debts-table th,
+.dark-mode .debts-table td {
+  border-bottom-color: #555;
+}
+
+.debts-table th {
+  background-color: #f0f0f0;
+}
+
+.dark-mode .debts-table th {
+  background-color: #444;
+}
+
+.paid {
+  color: #4caf50;
+  font-weight: bold;
+}
+
+.remaining {
+  color: #ff9800;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.dark-mode table th,
+.dark-mode table td {
+  border-color: #555;
+}
+
+.recent-transactions {
+  overflow-x: auto;
+}
+
+.recent-transactions table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.recent-transactions th {
+  background-color: #2196f3;
+  color: white;
+}
+
+.dark-mode .recent-transactions th {
+  background-color: #1976d2;
+}
+
+.recent-transactions td,
+.recent-transactions th {
+  padding: 10px;
+  text-align: left;
+}
+
+.recent-transactions table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.dark-mode .recent-transactions table tr:nth-child(even) {
+  background-color: #2b2b2b;
+}
+
+.recent-transactions table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.dark-mode .recent-transactions table tr:hover {
+  background-color: #3a3a3a;
+}
+
+/* Responsive Adjustments */
+
+@media (max-width: 768px) {
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .action-button {
+    width: 100%;
+    max-width: 240px;
+  }
+  
+  .expense-summary,
+  .debts,
+  .recurring-expenses,
+  .savings-goals {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-welcome h1 {
+    font-size: 2rem;
+  }
+  
+  .dashboard-welcome h2 {
+    font-size: 1.1rem;
+  }
+  
+  .action-button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .expense-summary h3,
+  .overall-summary h3,
+  .debts h3,
+  .recurring-expenses h3 {
+    font-size: 1.3rem;
+  }
+}
