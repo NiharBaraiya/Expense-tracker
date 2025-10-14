@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import ViewExpenses from "./ViewExpenses"; // Adjust path if needed
-
-const API_BASE = "http://localhost:5000/api"; // Backend base URL
+import API from "../api";
 
 const ViewBudgets = () => {
   const [budgets, setBudgets] = useState([]);
@@ -22,15 +21,12 @@ const ViewBudgets = () => {
   const loadData = useCallback(async () => {
     try {
       const [budgetsRes, expensesRes] = await Promise.all([
-        fetch(`${API_BASE}/budgets`),
-        fetch(`${API_BASE}/expenses`),
+        API.get("/budgets"),
+        API.get("/expenses"),
       ]);
 
-      if (!budgetsRes.ok) throw new Error("Failed to fetch budgets");
-      if (!expensesRes.ok) throw new Error("Failed to fetch expenses");
-
-      const budgetsData = await budgetsRes.json();
-      const expensesData = await expensesRes.json();
+      const budgetsData = budgetsRes.data;
+      const expensesData = expensesRes.data;
 
       // Normalize budgets
       const normalizedBudgets = budgetsData.map((b) => ({
@@ -76,15 +72,7 @@ const ViewBudgets = () => {
     if (!window.confirm("🗑 Are you sure you want to delete this budget?")) return;
 
     try {
-      const res = await fetch(`${API_BASE}/budgets/delete/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.error || "Failed to delete budget");
-      }
-
+      await API.delete(`/budgets/delete/${id}`);
       await loadData();
 
       if (editId === id) {
@@ -133,20 +121,8 @@ const ViewBudgets = () => {
 
   // ✅ Update budget with correct route
   const updateBudget = async (id, data) => {
-    const res = await fetch(`${API_BASE}/budgets/update/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || "Failed to update budget");
-    }
-
-    return res.json();
+    const res = await API.put(`/budgets/update/${id}`, data);
+    return res.data;
   };
 
   // Save edited budget

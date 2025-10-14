@@ -5,8 +5,12 @@ const {
   updateBudget,
   deleteBudget,
 } = require("../controllers/budgetController");
+const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();
+
+// Apply auth middleware to all routes
+router.use(authMiddleware);
 
 router.post("/add", addBudget);
 router.get("/", getBudgets);

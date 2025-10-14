@@ -14,7 +14,9 @@ const debtRoutes = require("./routes/debtRoutes");
 const recurringRoutes = require("./routes/recurringRoutes");
 const savingsRoutes = require("./routes/savingsRoutes");
 const emailRoutes = require("./routes/emailRoutes");
-
+const feedbackRoutes = require('./routes/feedback');
+const userRoutes = require("./routes/user");
+const notificationRoutes = require("./routes/notificationRoutes");
 // Load environment variables
 dotenv.config();
 const app = express();
@@ -35,6 +37,19 @@ app.get("/", (req, res) => {
   res.send("✅ API is running...");
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: "OK", 
+    timestamp: new Date().toISOString(),
+    mongodb: mongoose.connection.readyState === 1 ? "Connected" : "Disconnected",
+    env: {
+      mongoUri: process.env.MONGO_URI ? "Set" : "Missing",
+      jwtSecret: process.env.JWT_SECRET ? "Set" : "Missing"
+    }
+  });
+});
+
 // ===== API Routes =====
 app.use("/api/auth", authRoutes);
 app.use("/api/budgets", budgetRoutes);
@@ -44,15 +59,26 @@ app.use("/api/debts", debtRoutes);
 app.use("/api/recurring", recurringRoutes);
 app.use("/api/savings", savingsRoutes);
 app.use("/api/email", emailRoutes);
-
+app.use('/api/feedback', feedbackRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/notifications", notificationRoutes);
 // ===== MongoDB Connection =====
+console.log("Attempting to connect to MongoDB...");
+console.log("MONGO_URI:", process.env.MONGO_URI ? "✅ Found" : "❌ Missing");
+console.log("JWT_SECRET:", process.env.JWT_SECRET ? "✅ Found" : "❌ Missing");
+
 mongoose
   .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("✅ MongoDB Connected"))
-  .catch((err) => console.error("❌ MongoDB Error:", err));
+  .then(() => {
+    console.log("✅ MongoDB Connected Successfully");
+  })
+  .catch((err) => {
+    console.error("❌ MongoDB Connection Error:", err);
+    process.exit(1);
+  });
 
 
 

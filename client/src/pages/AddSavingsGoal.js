@@ -1,23 +1,19 @@
 // pages/AddSavingsGoal.js
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import API from "../api";
 import "./AddSavingsGoal.css";
 
 const AddSavingsGoal = () => {
-  const navigate = useNavigate();
   const [goalAmount, setGoalAmount] = useState("");
   const [deadline, setDeadline] = useState("");
   const [goals, setGoals] = useState([]);
   const [editingId, setEditingId] = useState(null);
 
-  const API_URL = "http://localhost:5000/api/savings";
-
   useEffect(() => {
     const fetchGoals = async () => {
       try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        setGoals(data);
+        const res = await API.get('/savings');
+        setGoals(res.data);
       } catch (error) {
         console.error("Error fetching savings goals:", error);
       }
@@ -40,22 +36,12 @@ const AddSavingsGoal = () => {
 
     try {
       if (editingId) {
-        const res = await fetch(`${API_URL}/${editingId}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(goalData),
-        });
-        const updatedGoal = await res.json();
-        setGoals(goals.map((g) => (g._id === editingId ? updatedGoal : g)));
+        const res = await API.put(`/savings/${editingId}`, goalData);
+        setGoals(goals.map((g) => (g._id === editingId ? res.data : g)));
         alert("🎯 Savings goal updated successfully!");
       } else {
-        const res = await fetch(API_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(goalData),
-        });
-        const newGoal = await res.json();
-        setGoals([...goals, newGoal]);
+        const res = await API.post('/savings', goalData);
+        setGoals([...goals, res.data]);
         alert("🎯 Savings goal saved successfully!");
       }
 
@@ -77,7 +63,7 @@ const AddSavingsGoal = () => {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this goal?")) return;
     try {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      await API.delete(`/savings/${id}`);
       setGoals(goals.filter((g) => g._id !== id));
       alert("Goal deleted successfully!");
     } catch (error) {

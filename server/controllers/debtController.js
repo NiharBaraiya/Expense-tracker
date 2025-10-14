@@ -1,58 +1,100 @@
-import Debt from "../models/Debt.js";
+const Debt = require("../models/Debt");
 
 // ➕ Add a new debt
-export const addDebt = async (req, res) => {
+const addDebt = async (req, res) => {
   try {
-    const debt = new Debt(req.body);
+    const userId = req.userId; // From auth middleware
+    console.log("Adding debt for user:", userId, "Data:", req.body);
+    
+    const debt = new Debt({ ...req.body, userId });
     await debt.save();
+    console.log("Debt saved successfully:", debt);
     res.status(201).json(debt);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error adding debt:", err);
+    res.status(500).json({ 
+      error: "Server error while adding debt", 
+      details: err.message 
+    });
   }
 };
 
 // 📋 Get all debts
-export const getDebts = async (req, res) => {
+const getDebts = async (req, res) => {
   try {
-    const debts = await Debt.find().sort({ createdAt: -1 });
+    const userId = req.userId; // From auth middleware
+    console.log("Fetching debts for user:", userId);
+    
+    const debts = await Debt.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(debts);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error fetching debts:", err);
+    res.status(500).json({ 
+      error: "Server error while fetching debts", 
+      details: err.message 
+    });
   }
 };
 
 // ✏️ Update a debt
-export const updateDebt = async (req, res) => {
+const updateDebt = async (req, res) => {
   try {
-    const debt = await Debt.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!debt) return res.status(404).json({ message: "Debt not found" });
+    const userId = req.userId; // From auth middleware
+    console.log("Updating debt:", req.params.id, "for user:", userId, "Data:", req.body);
+    
+    const debt = await Debt.findOneAndUpdate(
+      { _id: req.params.id, userId },
+      req.body,
+      { new: true }
+    );
+    if (!debt) {
+      return res.status(404).json({ message: "Debt not found" });
+    }
+    console.log("Debt updated successfully:", debt);
     res.status(200).json(debt);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error updating debt:", err);
+    res.status(500).json({ 
+      error: "Server error while updating debt", 
+      details: err.message 
+    });
   }
 };
 
 // 🗑️ Delete a debt
-export const deleteDebt = async (req, res) => {
+const deleteDebt = async (req, res) => {
   try {
-    const debt = await Debt.findByIdAndDelete(req.params.id);
-    if (!debt) return res.status(404).json({ message: "Debt not found" });
+    const userId = req.userId; // From auth middleware
+    console.log("Deleting debt:", req.params.id, "for user:", userId);
+    
+    const debt = await Debt.findOneAndDelete({ _id: req.params.id, userId });
+    if (!debt) {
+      return res.status(404).json({ message: "Debt not found" });
+    }
+    console.log("Debt deleted successfully:", debt);
     res.status(200).json({ message: "Debt deleted" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error deleting debt:", err);
+    res.status(500).json({ 
+      error: "Server error while deleting debt", 
+      details: err.message 
+    });
   }
 };
 
 // 💰 Add a payment to a debt
-export const addPayment = async (req, res) => {
+const addPayment = async (req, res) => {
   try {
     const { id } = req.params;
     const { amount } = req.body;
+    const userId = req.userId; // From auth middleware
 
-    const debt = await Debt.findById(id);
-    if (!debt) return res.status(404).json({ message: "Debt not found" });
+    console.log("Adding payment to debt:", id, "Amount:", amount, "User:", userId);
+
+    const debt = await Debt.findOne({ _id: id, userId });
+    if (!debt) {
+      return res.status(404).json({ message: "Debt not found" });
+    }
 
     // Deduct payment
     debt.remaining -= amount;
@@ -65,8 +107,21 @@ export const addPayment = async (req, res) => {
     }
 
     await debt.save();
+    console.log("Payment added successfully:", debt);
     res.status(200).json(debt);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error("Error adding payment to debt:", err);
+    res.status(500).json({ 
+      error: "Server error while adding payment", 
+      details: err.message 
+    });
   }
+};
+
+module.exports = {
+  addDebt,
+  getDebts,
+  updateDebt,
+  deleteDebt,
+  addPayment,
 };

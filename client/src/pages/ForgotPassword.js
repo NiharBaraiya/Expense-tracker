@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     setLoading(true);
     setMessage('');
     try {
-      const res = await API.post('/api/auth/forgot-password', { email });
+      const res = await API.post('/auth/forgot-password', { email });
       setMessage(res.data.message || 'Reset link sent successfully');
       setIsError(false);
     } catch (err) {

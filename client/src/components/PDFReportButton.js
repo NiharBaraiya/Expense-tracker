@@ -4,7 +4,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import html2canvas from "html2canvas";
 import Chart from "chart.js/auto";
-import axios from "axios";
+import API from "../api";
 import "./PDFStyles.css";
 
 const PDFReportButton = ({ expenses, budgets, debts, income, recurring }) => {
@@ -256,7 +256,7 @@ const PDFReportButton = ({ expenses, budgets, debts, income, recurring }) => {
       formData.append("text", "Here is your financial report from Expense Tracker.");
       formData.append("pdf", pdfBlob, "Expense_Report.pdf");
 
-      await axios.post("http://localhost:5000/api/email/send-report", formData, {
+      await API.post("/email/send-report", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

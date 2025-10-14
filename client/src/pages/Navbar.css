@@ -27,6 +27,17 @@
 }
 
 
+.nav-user {
+  color: #007BFF;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.nav-user:hover {
+  background-color: rgba(0,123,255,0.15);
+}
 
 /* === Right Section === */
 .navbar-right {

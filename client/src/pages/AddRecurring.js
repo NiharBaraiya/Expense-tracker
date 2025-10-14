@@ -1,74 +1,73 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import API from "../api";
 import "./AddRecurring.css";
 
-const API_URL = "http://localhost:5000/api/recurring";
-
 const AddRecurring = () => {
-  const navigate = useNavigate();
   const [recurringList, setRecurringList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
 
   const fetchRecurring = async () => {
     try {
-      const res = await fetch(API_URL);
-      const data = await res.json();
-      setRecurringList(data);
+      const res = await API.get('/recurring');
+      setRecurringList(res.data);
     } catch (err) {
-      console.error("Backend fetch failed, using localStorage fallback", err);
-      const stored = JSON.parse(localStorage.getItem("recurring")) || [];
-      setRecurringList(stored);
+      console.error("Error fetching recurring items:", err);
     }
   };
 
   useEffect(() => {
     fetchRecurring();
+  }, []);
 
-    const stored = JSON.parse(localStorage.getItem("recurring")) || [];
-    const today = new Date().toISOString().split("T")[0];
-    let updated = [...stored];
-    let changed = false;
+  useEffect(() => {
+    // Process due recurring items with API calls instead of localStorage
+    const processDueRecurring = async () => {
+      const today = new Date().toISOString().split("T")[0];
+      
+      for (const r of recurringList) {
+        if (r.nextDue && r.nextDue <= today) {
+          if (window.confirm(`⚡ ${r.title} is due today. Add to ${r.type}?`)) {
+            try {
+              if (r.type === "expense") {
+                await API.post('/expenses/add', {
+                  title: r.title,
+                  amount: r.amount,
+                  category: "Recurring",
+                  date: today,
+                  notes: `Auto-added from recurring: ${r.title}`
+                });
+              } else {
+                await API.post('/incomes', {
+                  title: r.title,
+                  amount: r.amount,
+                  date: today,
+                  notes: `Auto-added from recurring: ${r.title}`
+                });
+              }
 
-    stored.forEach((r) => {
-      if (r.nextDue && r.nextDue <= today) {
-        if (window.confirm(`⚡ ${r.title} is due today. Add to ${r.type}?`)) {
-          const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-          const incomes = JSON.parse(localStorage.getItem("income")) || [];
-
-          if (r.type === "expense") {
-            expenses.push({
-              id: Date.now().toString(),
-              title: r.title,
-              amount: r.amount,
-              date: today,
-              category: "Recurring",
-            });
-            localStorage.setItem("expenses", JSON.stringify(expenses));
-          } else {
-            incomes.push({
-              id: Date.now().toString(),
-              title: r.title,
-              amount: r.amount,
-              date: today,
-              category: "Recurring",
-            });
-            localStorage.setItem("income", JSON.stringify(incomes));
+              // Update next due date
+              const next = new Date(today);
+              next.setMonth(next.getMonth() + 1);
+              
+              await API.put(`/recurring/${r._id}`, {
+                ...r,
+                nextDue: next.toISOString().split("T")[0]
+              });
+            } catch (err) {
+              console.error("Error processing recurring item:", err);
+            }
           }
-
-          const next = new Date(today);
-          next.setMonth(next.getMonth() + 1);
-          r.nextDue = next.toISOString().split("T")[0];
-          changed = true;
         }
       }
-    });
+      // Refresh the list after processing
+      fetchRecurring();
+    };
 
-    if (changed) {
-      setRecurringList(updated);
-      localStorage.setItem("recurring", JSON.stringify(updated));
+    if (recurringList.length > 0) {
+      processDueRecurring();
     }
-  }, []);
+  }, [recurringList]);
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -86,17 +85,8 @@ const AddRecurring = () => {
     }
 
     try {
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newRecurring),
-      });
-      const data = await res.json();
-
-      setRecurringList([...recurringList, data]);
-      const updatedLS = [...recurringList, { ...newRecurring, id: Date.now().toString() }];
-      localStorage.setItem("recurring", JSON.stringify(updatedLS));
-
+      const res = await API.post('/recurring', newRecurring);
+      setRecurringList([...recurringList, res.data]);
       form.reset();
       alert("✅ Recurring transaction added!");
     } catch (err) {
@@ -116,19 +106,8 @@ const AddRecurring = () => {
 
   const handleSave = async (id) => {
     try {
-      if (editForm._id) {
-        const res = await fetch(`${API_URL}/${id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(editForm),
-        });
-        const data = await res.json();
-        setRecurringList((prev) => prev.map((r) => (r._id === id ? data : r)));
-      } else {
-        const updatedLS = recurringList.map((r) => (r.id === id ? { ...editForm, id } : r));
-        setRecurringList(updatedLS);
-        localStorage.setItem("recurring", JSON.stringify(updatedLS));
-      }
+      const res = await API.put(`/recurring/${id}`, editForm);
+      setRecurringList((prev) => prev.map((r) => (r._id === id ? res.data : r)));
       setEditingId(null);
       setEditForm({});
       alert("✅ Recurring updated successfully!");
@@ -146,15 +125,8 @@ const AddRecurring = () => {
     if (!window.confirm("Delete this recurring transaction?")) return;
 
     try {
-      const toDelete = recurringList.find((r) => r._id === id);
-      if (toDelete) {
-        await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        setRecurringList((prev) => prev.filter((r) => r._id !== id));
-      } else {
-        const updatedLS = recurringList.filter((r) => r.id !== id);
-        setRecurringList(updatedLS);
-        localStorage.setItem("recurring", JSON.stringify(updatedLS));
-      }
+      await API.delete(`/recurring/${id}`);
+      setRecurringList((prev) => prev.filter((r) => r._id !== id));
     } catch (err) {
       console.error("Error deleting recurring:", err);
     }

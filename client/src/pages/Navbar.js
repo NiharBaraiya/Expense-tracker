@@ -19,7 +19,7 @@ const Navbar = ({ username, onLogout }) => {
            <Link to="/about"className="nav-link">About</Link>
 <Link to="/feedback"className="nav-link">Feedback</Link>
 
-            <span className="nav-user">👤 {username}</span>
+            <Link to="/profile" className="nav-user">👤 {username}</Link>
             <button onClick={onLogout} className="logout-btn">Logout</button>
           </>
         ) : (

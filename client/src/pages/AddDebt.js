@@ -1,18 +1,13 @@
 // pages/AddDebt.js
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import './AddDebt.css';
 
 const AddDebt = () => {
-  const navigate = useNavigate();
-
   const [debtList, setDebtList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
   const [paymentAmount, setPaymentAmount] = useState({});
-
-  const API_URL = "http://localhost:5000/api/debts"; // Adjust port if needed
 
   useEffect(() => {
     fetchDebts();
@@ -20,7 +15,7 @@ const AddDebt = () => {
 
   const fetchDebts = async () => {
     try {
-      const res = await axios.get(API_URL);
+      const res = await API.get('/debts');
       setDebtList(res.data);
     } catch (err) {
       console.error("Error fetching debts:", err);
@@ -46,7 +41,7 @@ const AddDebt = () => {
     }
 
     try {
-      await axios.post(API_URL, newDebt);
+      await API.post('/debts', newDebt);
       fetchDebts();
       form.reset();
       alert("✅ Debt added successfully!");
@@ -71,7 +66,7 @@ const AddDebt = () => {
 
   const handleSave = async (id) => {
     try {
-      await axios.put(`${API_URL}/${id}`, editForm);
+      await API.put(`/debts/${id}`, editForm);
       fetchDebts();
       setEditingId(null);
       setEditForm({});
@@ -90,7 +85,7 @@ const AddDebt = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this debt?")) {
       try {
-        await axios.delete(`${API_URL}/${id}`);
+        await API.delete(`/debts/${id}`);
         fetchDebts();
       } catch (err) {
         console.error("Error deleting debt:", err);
@@ -107,7 +102,7 @@ const AddDebt = () => {
     }
 
     try {
-      await axios.post(`${API_URL}/${debtId}/payment`, { amount });
+      await API.post(`/debts/${debtId}/payment`, { amount });
       fetchDebts();
       setPaymentAmount({ ...paymentAmount, [debtId]: "" });
       alert("💰 Payment recorded!");

@@ -1,7 +1,7 @@
 // pages/AddIncome.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import './AddIncome.css';
 
 const AddIncome = () => {
@@ -9,12 +9,11 @@ const AddIncome = () => {
   const [incomeList, setIncomeList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
-  const API_URL = "http://localhost:5000/api/incomes"; // Update if your server runs on another URL
 
   // Fetch existing incomes from backend
   const fetchIncomes = async () => {
     try {
-      const res = await axios.get(API_URL);
+      const res = await API.get("/incomes");
       setIncomeList(res.data);
     } catch (err) {
       console.error("Error fetching incomes:", err);
@@ -43,7 +42,7 @@ const AddIncome = () => {
     }
 
     try {
-      const res = await axios.post(API_URL, newIncome);
+      const res = await API.post("/incomes", newIncome);
       setIncomeList([res.data, ...incomeList]);
       form.reset();
       alert("✅ Income added successfully!");
@@ -68,7 +67,7 @@ const AddIncome = () => {
   // Save edit
   const handleSave = async (id) => {
     try {
-      const res = await axios.put(`${API_URL}/${id}`, editForm);
+      const res = await API.put(`/incomes/${id}`, editForm);
       const updated = incomeList.map((inc) => (inc._id === id ? res.data : inc));
       setIncomeList(updated);
       setEditingId(null);
@@ -91,7 +90,7 @@ const AddIncome = () => {
     if (!window.confirm("Are you sure you want to delete this income?")) return;
 
     try {
-      await axios.delete(`${API_URL}/${id}`);
+      await API.delete(`/incomes/${id}`);
       setIncomeList(incomeList.filter((inc) => inc._id !== id));
     } catch (err) {
       console.error("Error deleting income:", err);

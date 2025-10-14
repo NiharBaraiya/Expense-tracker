@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   PieChart, Pie, Cell, Tooltip as ReTooltip, Legend,
-  LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar,  Tooltip,LabelList
+  LineChart, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar,  Tooltip,LabelList
 } from 'recharts';
 import PDFReportButton from '../components/PDFReportButton';
-import axios from "axios";
-import jsPDF from "jspdf";
+import API from "../api";
+
 
 import './Dashboard.css';
 
@@ -79,20 +79,23 @@ const [pdfBase64, setPdfBase64] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch from backend
-        const expRes = await fetch("http://localhost:5000/api/expenses");
-        const budRes = await fetch("http://localhost:5000/api/budgets");
-        const debtRes = await fetch("http://localhost:5000/api/debts");
-        const incomeRes = await fetch("http://localhost:5000/api/incomes");
-        const recurringRes = await fetch("http://localhost:5000/api/recurring"); 
-        const savingsRes = await fetch("http://localhost:5000/api/savings");
-        const expData = await expRes.json();
-        const budData = await budRes.json();
-       const debtData = await debtRes.json(); 
-       const incomeData = await incomeRes.json();
-       const recurringData = await recurringRes.json();
-       const savingsData = await savingsRes.json();
-       const goal = Array.isArray(savingsData) && savingsData.length > 0 ? savingsData[0] : { amount: 0, deadline: "" };
+        // Fetch from backend using API with auth headers
+        const [expRes, budRes, debtRes, incomeRes, recurringRes, savingsRes] = await Promise.all([
+          API.get("/expenses"),
+          API.get("/budgets"),
+          API.get("/debts"),
+          API.get("/incomes"),
+          API.get("/recurring"),
+          API.get("/savings")
+        ]);
+
+        const expData = expRes.data;
+        const budData = budRes.data;
+        const debtData = debtRes.data;
+        const incomeData = incomeRes.data;
+        const recurringData = recurringRes.data;
+        const savingsData = savingsRes.data;
+        const goal = Array.isArray(savingsData) && savingsData.length > 0 ? savingsData[0] : { amount: 0, deadline: "" };
 
         // Update state
         setExpenses(expData || []);
@@ -100,19 +103,27 @@ const [pdfBase64, setPdfBase64] = useState(null);
         setDebts(debtData || []);
         setIncome(incomeData || []);
         setRecurring(recurringData ||[]);
+        setRecurringExpenses(recurringData || []); // Fix: Set recurringExpenses for display
         setSavingsGoal(goal);
-        // Save in localStorage (offline sync)
-        localStorage.setItem("expenses", JSON.stringify(expData));
-        localStorage.setItem("budgets", JSON.stringify(budData));
-        localStorage.setItem("debts", JSON.stringify(debtData));
-        localStorage.setItem("income", JSON.stringify(incomeData));
-        localStorage.setItem("recurring", JSON.stringify(recurringData));
-        localStorage.setItem("savingsGoal", JSON.stringify(goal));
+        
+        // Clear localStorage fallback data since we got fresh data
+        localStorage.removeItem("expenses");
+        localStorage.removeItem("budgets");
+        localStorage.removeItem("debts");
+        localStorage.removeItem("income");
+        localStorage.removeItem("recurring");
+        localStorage.removeItem("savingsGoal");
 
       } catch (err) {
-        console.error("⚠ Backend fetch failed, using localStorage fallback:", err);
-        setExpenses(JSON.parse(localStorage.getItem("expenses")) || []);
-        setBudgets(JSON.parse(localStorage.getItem("budgets")) || []);
+        console.error("⚠ Backend fetch failed:", err);
+        // On error, clear any stale data instead of using localStorage fallback
+        setExpenses([]);
+        setBudgets([]);
+        setDebts([]);
+        setIncome([]);
+        setRecurring([]);
+        setRecurringExpenses([]); // Fix: Clear recurringExpenses on error
+        setSavingsGoal({ amount: 0, deadline: "" });
       }
     };
 
@@ -121,25 +132,24 @@ const [pdfBase64, setPdfBase64] = useState(null);
 
   // ===== Recalculate whenever expenses/budgets change =====
   useEffect(() => {
-    const storedIncome = JSON.parse(localStorage.getItem('income')) || [];
-    const storedCategoryGoals = JSON.parse(localStorage.getItem('categoryGoals')) || {};
-    const storedRecurring = JSON.parse(localStorage.getItem('recurring')) || [];
-    const storedSettings = JSON.parse(localStorage.getItem('settings')) || { currency:'₹', theme:'light' };
-    const storedDebts = JSON.parse(localStorage.getItem('debts')) || [];
-   const localStoredExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
-   const storedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
-
-    setStoredExpenses(localStoredExpenses);
-
-    setCategoryGoals(storedCategoryGoals);
-    setRecurringExpenses(storedRecurring);
-    setUserSettings(storedSettings);
-    setDebts(storedDebts);
-    setIncome(storedIncome);
+    // Use state data instead of localStorage for calculations
     const now = new Date();
-    const sumByDate = (start, end) =>
-      expenses.filter(e => { const d = new Date(e.date); return d >= start && d <= end; })
-      .reduce((sum, e) => sum + Number(e.expenseAmount || e.amount || 0), 0);
+    // Helper: normalize any date-like value to local midnight timestamp
+    const toLocalMidnightTime = (dateLike) => {
+      const d = new Date(dateLike);
+      return new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    };
+    // Sum values where the expense's local-day falls within [start, end] days
+    const sumByDate = (start, end) => {
+      const startDay = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+      const endDay = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+      return expenses
+        .filter((e) => {
+          const t = toLocalMidnightTime(e.date);
+          return t >= startDay && t <= endDay;
+        })
+        .reduce((sum, e) => sum + Number(e.expenseAmount || e.amount || 0), 0);
+    };
 
     // Dates
     const todayStart = new Date(now); todayStart.setHours(0,0,0,0);
@@ -151,27 +161,28 @@ const [pdfBase64, setPdfBase64] = useState(null);
     const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastMonthStart = new Date(now.getFullYear(), now.getMonth()-1, 1);
     const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-// Income & savings
-const incomeTotal = storedIncome.reduce((sum, inc) => sum + Number(inc.amount || 0), 0);
-setTotalIncome(incomeTotal);
 
-// Calculate actual tracked savings
-const trackedSavings = incomeTotal 
-                       - expenses.reduce((sum, e) => sum + Number(e.expenseAmount || e.amount || 0), 0, ) 
-                       - storedDebts.reduce((sum, d) => sum + Number(d.amount || 0), 0);
+    // Income & savings using state data
+    const incomeTotal = income.reduce((sum, inc) => sum + Number(inc.amount || 0), 0);
+    setTotalIncome(incomeTotal);
 
-setCurrentSavings(trackedSavings);
+    // Calculate actual tracked savings
+    const trackedSavings = incomeTotal 
+                           - expenses.reduce((sum, e) => sum + Number(e.expenseAmount || e.amount || 0), 0) 
+                           - debts.reduce((sum, d) => sum + Number(d.amount || 0), 0);
 
-// Also keep netSavings if needed
-setNetSavings(incomeTotal - expensesSummary.month);
+    setCurrentSavings(trackedSavings);
 
-    setExpensesSummary({
+    const expensesSummaryData = {
       today: sumByDate(todayStart, todayEnd),
       yesterday: sumByDate(yesterdayStart, yesterdayEnd),
       week: sumByDate(weekStart, todayEnd),
       month: sumByDate(monthStart, todayEnd),
       lastMonth: sumByDate(lastMonthStart, lastMonthEnd),
-    });
+    };
+
+    setExpensesSummary(expensesSummaryData);
+    setNetSavings(incomeTotal - expensesSummaryData.month);
 
     // Top categories
     const categoryTotals = expenses.reduce((acc, e) => {
@@ -191,9 +202,6 @@ setNetSavings(incomeTotal - expensesSummary.month);
       const percentUsed = budgetAmount>0?Math.min((spent/budgetAmount)*100,100):0;
       const remaining = Math.max(budgetAmount-spent,0);
 
-      if(storedCategoryGoals[b.category] && (budgetAmount - spent) < storedCategoryGoals[b.category]){
-        addAlertMessage(`⚠️ "${b.category}" below savings goal of ${storedSettings.currency} ${storedCategoryGoals[b.category]}`);
-      }
       if(percentUsed>=100) addAlertMessage(`Overspent in "${b.category}"!`);
       else if(percentUsed>=90) addAlertMessage(`Almost reaching limit in "${b.category}"!`);
       else if(percentUsed>=75) addAlertMessage(`75% of "${b.category}" used.`);
@@ -214,17 +222,17 @@ setNetSavings(incomeTotal - expensesSummary.month);
     // setTotalIncome(incomeTotal);
     setNetSavings(incomeTotal - expensesSummary.month);
 
-    // Recurring + Debts
-    storedRecurring.forEach(r=>{
+    // Recurring + Debts alerts using state data
+    recurring.forEach(r=>{
       const nextDate = new Date(r.nextDue);
       if(nextDate - now < 3*24*60*60*1000){
-        addAlertMessage(`Reminder: "${r.title}" of ${storedSettings.currency} ${r.amount} is due on ${r.nextDue}`);
+        addAlertMessage(`Reminder: "${r.title}" of ${userSettings.currency} ${r.amount} is due on ${r.nextDue}`);
       }
     });
-    storedDebts.forEach(d=>{
+    debts.forEach(d=>{
       const due = new Date(d.dueDate);
       if(due - now < 3*24*60*60*1000 && !d.paid){
-        addAlertMessage(`Debt/Loan "${d.title}" of ${storedSettings.currency} ${d.amount} is due on ${d.dueDate}`);
+        addAlertMessage(`Debt/Loan "${d.title}" of ${userSettings.currency} ${d.amount} is due on ${d.dueDate}`);
       }
     });
 
@@ -232,12 +240,9 @@ setNetSavings(incomeTotal - expensesSummary.month);
       didAlert.current = true;
       showConsolidatedAlert();
     }
-  }, [expenses, budgets]);
+  }, [expenses, budgets, debts, income, recurring, userSettings.currency, expensesSummary.month]);
 
-  const handleLogout = () => {
-    localStorage.clear();
-    navigate('/login');
-  };
+  // Note: Logout handled elsewhere (e.g., Navbar); removed unused local handler.
 
   const filteredExpenses = filterCategory ? recentExpenses.filter(e=>e.category===filterCategory) : recentExpenses;
 
@@ -407,10 +412,8 @@ setNetSavings(incomeTotal - expensesSummary.month);
     const deadline = savingsGoal.deadline;
 
     // Income & Expenses
-    const storedIncome = JSON.parse(localStorage.getItem("income")) || [];
-    const storedExpenses = JSON.parse(localStorage.getItem("expenses")) || [];
-    const totalIncome = storedIncome.reduce((sum, inc) => sum + Number(inc.amount), 0);
-    const totalExpense = storedExpenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+    const totalIncome = income.reduce((sum, inc) => sum + Number(inc.amount), 0);
+    const totalExpense = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
     const currentSavings = totalIncome - totalExpense;
 
     // Progress
@@ -509,9 +512,7 @@ setNetSavings(incomeTotal - expensesSummary.month);
 <div className="budget-progress">
   <h3 className="expense-summary">📊 Budget Progress & Category Goals</h3>
   {budgetProgress.length > 0 ? budgetProgress.map((b, i) => {
-    const storedExpenses = JSON.parse(localStorage.getItem("expenses")) || [];
-
-    const spent = storedExpenses
+    const spent = expenses
       .filter(
         exp =>
           exp.category?.trim().toLowerCase() === b.category.trim().toLowerCase()
@@ -784,7 +785,7 @@ setNetSavings(incomeTotal - expensesSummary.month);
 {/* RECURRING EXPENSES */}
 <div className='recurring-expenses'> 
   <h3>🔁 Recurring Expenses</h3>
-  {recurringExpenses.length > 0 ? (
+  {recurringExpenses.filter(r => r.type === "expense").length > 0 ? (
     <table>
       <thead className='recent-transactions th, .recent-transactions td'>
         <tr>
@@ -796,22 +797,26 @@ setNetSavings(incomeTotal - expensesSummary.month);
         </tr>
       </thead>
       <tbody>
-        {recurringExpenses.map((r, i) => {
+        {recurringExpenses.filter(r => r.type === "expense").map((r, i) => {
           // Determine if auto-added today
           const today = new Date().toISOString().split("T")[0];
-          const isAutoAdded = r.nextDue && r.nextDue <= today && r.type === "expense";
+          const nextDueDate = new Date(r.nextDue).toISOString().split("T")[0];
+          const isOverdue = nextDueDate < today;
+          const isDueToday = nextDueDate === today;
 
           return (
             <tr key={i}>
               <td>{r.title}</td>
               <td>{userSettings.currency}{r.amount}</td>
               <td>{r.frequency || "Monthly"}</td>
-              <td>{new Date(r.nextDue).toISOString().split("T")[0]}</td>
+              <td>{nextDueDate}</td>
               <td>
-                {isAutoAdded ? (
-                  <span>✔ Auto-added</span>
+                {isOverdue ? (
+                  <span style={{color: 'red'}}>⚠ Overdue</span>
+                ) : isDueToday ? (
+                  <span style={{color: 'orange'}}>⏰ Due Today</span>
                 ) : (
-                  <span>Pending</span>
+                  <span style={{color: 'green'}}>✓ Scheduled</span>
                 )}
               </td>
             </tr>
@@ -821,6 +826,53 @@ setNetSavings(incomeTotal - expensesSummary.month);
     </table>
   ) : (
     <p>No recurring expenses.</p>
+  )}
+</div>
+
+{/* RECURRING INCOME */}
+<div className='recurring-expenses'> 
+  <h3>💰 Recurring Income</h3>
+  {recurringExpenses.filter(r => r.type === "income").length > 0 ? (
+    <table>
+      <thead className='recent-transactions th, .recent-transactions td'>
+        <tr>
+          <th>Title</th>
+          <th>Amount</th>
+          <th>Frequency</th>
+          <th>Next Due</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {recurringExpenses.filter(r => r.type === "income").map((r, i) => {
+          // Determine if auto-added today
+          const today = new Date().toISOString().split("T")[0];
+          const nextDueDate = new Date(r.nextDue).toISOString().split("T")[0];
+          const isOverdue = nextDueDate < today;
+          const isDueToday = nextDueDate === today;
+
+          return (
+            <tr key={i}>
+              <td>{r.title}</td>
+              <td>{userSettings.currency}{r.amount}</td>
+              <td>{r.frequency || "Monthly"}</td>
+              <td>{nextDueDate}</td>
+              <td>
+                {isOverdue ? (
+                  <span style={{color: 'red'}}>⚠ Overdue</span>
+                ) : isDueToday ? (
+                  <span style={{color: 'orange'}}>⏰ Due Today</span>
+                ) : (
+                  <span style={{color: 'green'}}>✓ Scheduled</span>
+                )}
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  ) : (
+    <p>No recurring income.</p>
   )}
 </div>
 
@@ -846,7 +898,7 @@ setNetSavings(incomeTotal - expensesSummary.month);
             </thead>
             <tbody className='recent-transactions td'>
               {filteredExpenses.map((e,i)=>(<tr key={i}>
-                <td>{e.date}</td>
+                <td>{new Date(e.date).toLocaleDateString()}</td>
                 <td className='.recent-transactions .category'>{e.category}</td>
                 <td>{e.title || e.description || '-'}</td>
                 <td>{userSettings.currency} {Number(e.expenseAmount || e.amount || 0).toFixed(2)}</td>

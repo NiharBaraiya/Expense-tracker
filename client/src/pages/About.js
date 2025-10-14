@@ -91,10 +91,11 @@ const About = () => {
           Have feedback, feature ideas, or want to report a bug? Let’s connect:
         </p>
         <ul className="about-features-list">
-          <li>📧 Email: <a href="mailto:support@expensetracker.com">support@expensetracker.com</a></li>
+          <li>📧 Email: <a href="mailto:support@expensetracker.com">nihar@gmail.com</a></li>
           <li>🌐 Website: <a href="https://www.expensetracker.com" target="_blank" rel="noopener noreferrer">www.expensetracker.com</a></li>
-          <li>💼 LinkedIn: <a href="https://www.linkedin.com/company/expensetracker" target="_blank" rel="noopener noreferrer">Expense Tracker on LinkedIn</a></li>
-          <li>👨‍💻 GitHub: <a href="https://github.com/expensetracker" target="_blank" rel="noopener noreferrer">github.com/expensetracker</a></li>
+          <li>💼 LinkedIn: <a href="https://www.linkedin.com/in/niharbaraiya/" target="_blank" rel="noopener noreferrer">LinkedIn Profile</a></li>
+          <li>👨‍💻 GitHub: <a href="https://github.com/NiharBaraiya/Expense-tracker" target="_blank" rel="noopener noreferrer">github.com/expensetracker</a></li>
+          <li>📞 Phone No:+91 987654321</li> 
         </ul>
       </section>
 
@@ -107,7 +108,7 @@ const About = () => {
       <p>Smart Budgeting Inc.</p>
       <p>Nadiad, Gujarat</p>
       <p>India</p>
-      <p>Email: support@expensetracker.com</p>
+      <p>Email:nihar@gmail.com </p>
     </div>
 
     <div className="footer-section useful-links">
@@ -116,8 +117,9 @@ const About = () => {
         <li><Link to="/dashboard">Dashboard</Link></li>
         <li><Link to="/about">About Us</Link></li>
         <li><Link to="/feedback">Feedback</Link></li>
-        <li><Link to="/profile">My Profile</Link></li>
-        <li><Link to="/contact">Support</Link></li>
+        <li><Link to="https://www.linkedin.com/in/niharbaraiya/">Linkedin</Link></li>
+        <li><Link to="https://github.com/NiharBaraiya">Github</Link></li>
+        
       </ul>
     </div>
 

@@ -1,6 +1,7 @@
 // pages/AddBudget.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api';
 import './AddBudget.css';  // <-- Import CSS here
 
 const AddBudget = () => {
@@ -25,12 +26,24 @@ const AddBudget = () => {
   });
 
   const [expenses, setExpenses] = useState([]);
+  const [budgets, setBudgets] = useState([]);
   const navigate = useNavigate();
 
-  // Load stored expenses
+  // Load expenses from API
   useEffect(() => {
-    const storedExpenses = JSON.parse(localStorage.getItem('expenses')) || [];
-    setExpenses(storedExpenses);
+    const fetchData = async () => {
+      try {
+        const [expensesRes, budgetsRes] = await Promise.all([
+          API.get('/expenses'),
+          API.get('/budgets')
+        ]);
+        setExpenses(expensesRes.data);
+        setBudgets(budgetsRes.data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+      }
+    };
+    fetchData();
   }, []);
 
   // Handle budget form changes
@@ -47,66 +60,18 @@ const AddBudget = () => {
   const handleBudgetSubmit = async (e) => {
     e.preventDefault();
 
-    let budgets = JSON.parse(localStorage.getItem('budgets')) || [];
-
-    // Check if category exists locally
-    const categoryIndex = budgets.findIndex((b) => b.category === form.category);
-
-    if (categoryIndex !== -1) {
-      // Update existing budget locally
-      budgets[categoryIndex].amount = parseFloat(budgets[categoryIndex].amount) + parseFloat(form.amount);
-      budgets[categoryIndex].name = form.name.trim();
-      budgets[categoryIndex].description = form.description.trim();
-      budgets[categoryIndex].currency = form.currency;
-      budgets[categoryIndex].startDate = form.startDate;
-      budgets[categoryIndex].endDate = form.endDate;
-    } else {
-      // Add new budget locally
-      const newBudget = {
-        ...form,
-        id: Date.now(),
-        amount: parseFloat(form.amount),
+    try {
+      const res = await API.post("/budgets/add", {
         name: form.name.trim(),
         description: form.description.trim(),
-      };
-      budgets.push(newBudget);
-    }
-
-    try {
-      const res = await fetch("http://localhost:5000/api/budgets/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: form.name.trim(),
-          description: form.description.trim(),
-          amount: parseFloat(form.amount),
-          currency: form.currency,
-          category: form.category,
-          startDate: form.startDate,
-          endDate: form.endDate,
-        }),
+        amount: parseFloat(form.amount),
+        currency: form.currency,
+        category: form.category,
+        startDate: form.startDate,
+        endDate: form.endDate,
       });
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData?.error || "Failed to save budget to DB");
-      }
-
-      const data = await res.json();
-
-      // Sync localStorage with backend response
-      const updatedIndex = budgets.findIndex(b => b.category === data.category);
-      if (updatedIndex !== -1) {
-        budgets[updatedIndex] = {
-          ...budgets[updatedIndex],
-          amount: data.amount,  // ensure backend amount is synced
-        };
-      }
-
-      localStorage.setItem("budgets", JSON.stringify(budgets));
-
+      const data = res.data;
       alert(`✅ Budget Saved Successfully! (${data.category}: ${data.amount})`);
       console.log("Saved budget:", data);
 
@@ -132,7 +97,8 @@ const AddBudget = () => {
   const handleExpenseSubmit = async (e) => {
     e.preventDefault();
 
-    let budgets = JSON.parse(localStorage.getItem('budgets')) || [];
+    // Get current budgets from state instead of localStorage
+    // Note: budgets state is already loaded from API
     const budgetIndex = budgets.findIndex((b) => b.id === form.id);
 
     if (budgetIndex === -1) {
@@ -163,28 +129,14 @@ const AddBudget = () => {
 
     try {
       // Send expense to backend
-      const res = await fetch(`http://localhost:5000/api/expenses/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newExpense),
-      });
+      const res = await API.post('/expenses/add', newExpense);
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData?.error || "Failed to save expense to DB");
-      }
-
-      const savedExpense = await res.json();
-
-      // Update local state and localStorage
-      const updatedExpenses = [...expenses, savedExpense];
+      // Update local state only
+      const updatedExpenses = [...expenses, res.data];
       setExpenses(updatedExpenses);
-      localStorage.setItem("expenses", JSON.stringify(updatedExpenses));
 
       alert("✅ Expense Added Successfully!");
-      console.log("Saved expense:", savedExpense);
+      console.log("Saved expense:", res.data);
 
       navigate("/dashboard"); // redirect after adding
 
@@ -311,8 +263,26 @@ const AddBudget = () => {
           <option value="Retirement">Retirement</option>
           <option value="Flights">Flights</option>
           <option value="Hotels">Hotels</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Others">Others</option>
+          <option value="Shoes & Accessories">Shoes & Accessories</option>
+          <option value="Subscriptions">Subscriptions</option>
+          <option value="Charity">Charity</option>
+          <option value="Gifts">Gifts</option>
+          <option value="Personal Care">Personal Care</option>
+          <option value="Insurance">Insurance</option>
+          <option value="Pets">Pets</option>
+          <option value="Pet Food">Pet Food</option>
+          <option value="Vet Bills">Vet Bills</option>
+          <option value="Electronics">Electronics</option>
+          <option value="Sports & Fitness">Sports & Fitness</option>
+          <option value="Gym Membership">Gym Membership</option>
+          <option value="Home Maintenance">Home Maintenance</option>
+          <option value="Repairs">Repairs</option>
+          <option value="Garden & Outdoor">Garden & Outdoor</option>
+          <option value="Business Expenses">Business Expenses</option>
+          <option value="Office Supplies">Office Supplies</option>
+          <option value="Taxes">Taxes</option>
+          <option value="Loan Payments">Loan Payments</option>
+          <option value="Miscellaneous">Miscellaneous</option>
         </select>
 
         <label>Start Date:</label>

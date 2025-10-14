@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import API from "../api";
 import "./Auth.css";
 
 const Login = ({ onLogin }) => {
@@ -12,71 +12,70 @@ const Login = ({ onLogin }) => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const API_BASE = process.env.REACT_APP_API_URL || "";
 
-  // Validate and return array of error strings
+  // Validate email and password
   const validateFields = () => {
-  const errors = [];
+    const errors = [];
+    if (!email) errors.push("📧 Email is required.");
+    else if (!/^\S+@\S+\.\S+$/.test(email)) errors.push("📧 Invalid email format.");
+    if (!password) errors.push("🔒 Password is required.");
+    else if (password.length < 6) errors.push("🔒 Password must be at least 6 characters.");
+    return errors;
+  };
 
-  if (!email) {
-    errors.push("📧 Email is required.");
-  } else if (!/^\S+@\S+\.\S+$/.test(email)) {
-    errors.push("📧 Please enter a valid email address.");
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!password) {
-    errors.push("🔒 Password is required.");
-  } else if (password.length < 6) {
-    errors.push("🔒 Password must be at least 6 characters.");
-  }
-
-  return errors;
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  const errors = validateFields();
-  if (errors.length > 0) {
-    alert(errors.join("\n"));
-    return;
-  }
-
-  setLoading(true);
-
-  try {
-    const apiURL = API_BASE
-      ? `${API_BASE.replace(/\/$/, "")}/api/auth/login`
-      : "/api/auth/login";
-
-    const response = await axios.post(apiURL, { email, password });
-    const { token, username } = response.data || {};
-
-    if (!token) {
-      alert("⚠️ Authentication token missing from server response.");
-      setLoading(false);
+    const errors = validateFields();
+    if (errors.length) {
+      alert(errors.join("\n"));
       return;
     }
 
-    localStorage.setItem("token", token);
-    if (username) localStorage.setItem("username", username);
-    if (remember) localStorage.setItem("remember", "1");
+    setLoading(true);
 
-    if (onLogin) onLogin(username || "");
+    try {
+      const res = await API.post('/auth/login', { email, password });
+      const { token, username, userId } = res.data;
 
-    alert("✅ Login successful!");
-    navigate("/dashboard");
-  } catch (err) {
-    const errorMessage =
-      err?.response?.data?.message ||
-      err?.response?.data?.error ||
-      "❌ Login failed. Please try again.";
-    alert(errorMessage);
-  } finally {
-    setLoading(false);
-  }
-};
+      // Check if token or userId is missing
+      if (!token || !userId) {
+        alert("⚠️ Authentication failed: token or userId missing from server response.");
+        console.error("Server Response:", res.data);
+        setLoading(false);
+        return;
+      }
 
+      // Save credentials
+      localStorage.setItem("token", token);
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("username", username || "");
+      if (remember) localStorage.setItem("remember", "1");
+// fetch profile
+try {
+  const profileRes = await API.get('/user/profile');
+  const profileData = profileRes.data;
+  
+  // pass profile
+  if (onLogin) onLogin(profileData);  
+} catch (err2) {
+  console.error("Profile fetch after login error:", err2);
+  // you can still continue without profile or alert
+}
+      if (onLogin) onLogin(username || "");
+      alert("✅ Login successful!");
+      navigate("/dashboard");
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message ||
+        err?.response?.data?.error ||
+        "❌ Login failed. Please try again.";
+      alert(msg);
+      console.error("Login Error:", err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="auth-container" aria-labelledby="login-heading">
@@ -88,40 +87,36 @@ const handleSubmit = async (e) => {
       </div>
 
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        {/* Email */}
         <label htmlFor="login-email">Email</label>
         <div className="input-with-icon">
-          <span className="input-icon" aria-hidden>
-            📧
-          </span>
+          <span className="input-icon" aria-hidden="true">📧</span>
           <input
             id="login-email"
-            name="email"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
+            autoComplete="email"
           />
         </div>
 
-        <label htmlFor="login-password" className="label-margin-top">
-          Password
-        </label>
+        {/* Password */}
+        <label htmlFor="login-password" className="label-margin-top">Password</label>
         <div className="input-with-icon password-field">
-          <span className="input-icon" aria-hidden>
-            🔒
-          </span>
+          <span className="input-icon" aria-hidden="true">🔒</span>
           <input
             id="login-password"
-            name="password"
             type={showPwd ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
+            autoComplete="current-password"
           />
           <button
             type="button"
             className="pwd-toggle"
-            onClick={() => setShowPwd((prev) => !prev)}
+            onClick={() => setShowPwd(prev => !prev)}
             aria-pressed={showPwd}
             aria-label={showPwd ? "Hide password" : "Show password"}
           >
@@ -129,13 +124,13 @@ const handleSubmit = async (e) => {
           </button>
         </div>
 
+        {/* Remember me */}
         <div className="form-options">
-       
-          <Link to="/forgot-password" className="muted">
-            Forgot password?
-          </Link>
+        
+          <Link to="/forgot-password" className="muted">Forgot password?</Link>
         </div>
 
+        {/* Submit */}
         <button className="auth-submit" type="submit" disabled={loading}>
           {loading ? "Signing in..." : "Sign in"}
         </button>

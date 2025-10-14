@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import API from "../api";
 
 const ViewExpenses = ({ budgetId }) => {
   const [expenses, setExpenses] = useState([]);
@@ -15,16 +16,12 @@ const ViewExpenses = ({ budgetId }) => {
   const loadData = useCallback(async () => {
     try {
       const [expenseRes, budgetRes] = await Promise.all([
-        fetch("http://localhost:5000/api/expenses"),
-        fetch("http://localhost:5000/api/budgets"),
+        API.get("/expenses"),
+        API.get("/budgets"),
       ]);
 
-      if (!expenseRes.ok || !budgetRes.ok) {
-        throw new Error("Failed to fetch data from backend");
-      }
-
-      const expenseData = await expenseRes.json();
-      const budgetData = await budgetRes.json();
+      const expenseData = expenseRes.data;
+      const budgetData = budgetRes.data;
 
       const normalizedExpenses = expenseData.map((e) => ({
         ...e,
@@ -72,14 +69,7 @@ const ViewExpenses = ({ budgetId }) => {
     if (!window.confirm("Are you sure you want to delete this expense?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/expenses/delete/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete expense");
-      }
-
+      await API.delete(`/expenses/delete/${id}`);
       loadData();
     } catch (err) {
       console.error(err);
@@ -105,18 +95,10 @@ const ViewExpenses = ({ budgetId }) => {
 
   const handleSaveEdit = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/expenses/update/${editId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...editForm,
-          amount: Number(editForm.amount),
-        }),
+      await API.put(`/expenses/update/${editId}`, {
+        ...editForm,
+        amount: Number(editForm.amount),
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to update expense");
-      }
 
       setEditId(null);
       setEditForm({});
@@ -136,14 +118,7 @@ const ViewExpenses = ({ budgetId }) => {
     if (!window.confirm("Are you sure you want to delete this budget?")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/budgets/delete/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete budget");
-      }
-
+      await API.delete(`/budgets/delete/${id}`);
       loadData();
       setViewBudgetId(null);
       setShowBudgetExpenses(false);

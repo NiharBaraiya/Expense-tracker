@@ -80,7 +80,7 @@ const Home = () => {
       <p>Smart Budgeting Inc.</p>
       <p>Nadiad, Gujarat</p>
       <p>India</p>
-      <p>Email: support@expensetracker.com</p>
+      <p>Email:nihar@gmail.com </p>
     </div>
 
     <div className="footer-section useful-links">
@@ -89,8 +89,9 @@ const Home = () => {
         <li><Link to="/dashboard">Dashboard</Link></li>
         <li><Link to="/about">About Us</Link></li>
         <li><Link to="/feedback">Feedback</Link></li>
-        <li><Link to="/profile">My Profile</Link></li>
-        <li><Link to="/contact">Support</Link></li>
+        <li><Link to="https://www.linkedin.com/in/niharbaraiya/">Linkedin</Link></li>
+        <li><Link to="https://github.com/NiharBaraiya">Github</Link></li>
+        
       </ul>
     </div>
 

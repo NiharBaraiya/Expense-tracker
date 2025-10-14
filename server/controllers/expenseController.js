@@ -5,9 +5,11 @@ const Expense = require("../models/Expense");
 const addExpense = async (req, res) => {
   try {
     const { title, amount, currency, category, budgetId, date, notes } = req.body;
+    const userId = req.userId; // From auth middleware
 
     // Create new expense
     const newExpense = new Expense({
+      userId,
       title,
       amount,
       currency,
@@ -30,8 +32,9 @@ const updateExpense = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, amount, currency, category, budgetId, date, notes } = req.body;
+    const userId = req.userId; // From auth middleware
 
-    const expense = await Expense.findById(id);
+    const expense = await Expense.findOne({ _id: id, userId });
     if (!expense) {
       return res.status(404).json({ error: "Expense not found" });
     }
@@ -56,7 +59,8 @@ const updateExpense = async (req, res) => {
 // Get all expenses
 const getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find();
+    const userId = req.userId; // From auth middleware
+    const expenses = await Expense.find({ userId });
     res.status(200).json(expenses);
   } catch (error) {
     console.error(error);

@@ -1,6 +1,7 @@
 // pages/AddExpense.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../api";
 import "./AddExpense.css"; // ✅ Make sure this file contains matching CSS
 
 const AddExpense = ({ userId }) => {
@@ -21,10 +22,8 @@ const AddExpense = ({ userId }) => {
   useEffect(() => {
     const fetchBudgets = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/budgets");
-        if (!res.ok) throw new Error("Failed to fetch budgets");
-        const data = await res.json();
-        setBudgets(data);
+        const res = await API.get("/budgets");
+        setBudgets(res.data);
       } catch (err) {
         console.error(err);
         alert("❌ Failed to load budgets");
@@ -34,16 +33,11 @@ const AddExpense = ({ userId }) => {
 
     const fetchExpenses = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/expenses");
-        if (!res.ok) throw new Error("Failed to fetch expenses");
-        const data = await res.json();
-        setExpenses(data);
+        const res = await API.get("/expenses");
+        setExpenses(res.data);
       } catch (err) {
-        console.warn(
-          "Could not fetch expenses from backend, fallback to localStorage"
-        );
-        const local = JSON.parse(localStorage.getItem("expenses")) || [];
-        setExpenses(local);
+        console.warn("Could not fetch expenses from backend");
+        setExpenses([]);
       }
     };
     fetchExpenses();
@@ -88,28 +82,13 @@ const AddExpense = ({ userId }) => {
 
       if (existingExpense) {
         payload.amount += parseFloat(existingExpense.amount);
-        res = await fetch(
-          `http://localhost:5000/api/expenses/update/${existingExpense._id}`,
-          {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          }
-        );
+        res = await API.put(`/expenses/update/${existingExpense._id}`, payload);
       } else {
-        res = await fetch(`http://localhost:5000/api/expenses/add`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        res = await API.post('/expenses/add', payload);
       }
 
-      if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(errData?.error || "Failed to save/update expense in DB");
-      }
-
-      const data = await res.json();
+      // With axios, data is directly available in res.data
+      const data = res.data;
       console.log("Saved/Updated expense:", data);
       alert("✅ Expense saved/updated successfully!");
       navigate("/dashboard");
