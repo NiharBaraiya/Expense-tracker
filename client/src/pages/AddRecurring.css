@@ -1,283 +1,58 @@
-/* --- Add Recurring Container Styles (Modern & Clean to Match AddIncome) --- */
+/* ===============================
+  Add Recurring — Light Form on Dimmed Overlay (Dark + Gold brand)
+  Form + Existing list visible; background is disabled/dimmed.
+=============================== */
 
-/* Container */
-.add-recurring-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 30px 35px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #000;
-    
-  transition: box-shadow 0.3s ease;
-}
+:root { --accent:#FFD700; --accent-2:#FFC107; --accent-dark:#b48a00; --bg-overlay:rgba(0,0,0,.6); --card-bg:#fff; --text:#1a1a1a; --input-border:#e5e7eb; --input-border-hover:#d1d5db; --focus-ring:rgba(255,215,0,.25); }
 
-.add-recurring-container:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-
-/* Headings */
-.add-recurring-container h2 {
-  color: #2563eb; /* Blue, same as add-income */
-  font-weight: 700;
-  margin-bottom: 1.125rem; /* 18px */
-  text-align: center;
-  font-size: 2.25rem;
-}
-
-.add-recurring-container h3 {
-  color: #1e88e5; /* Slightly softer blue */
-  font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 1.125rem;
-  font-size: 1.8rem;
-  letter-spacing: 0.01em;
-}
-
-/* Recurring Form */
-.recurring-form {
+.add-recurring-container { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 18px; padding: clamp(48px, 10vh, 96px) 24px 24px; background: var(--bg-overlay); backdrop-filter: blur(6px); z-index: 1000; font-family: 'Poppins','Inter',system-ui,-apple-system, Segoe UI, Roboto, Arial, sans-serif; animation: fadeInOverlay 180ms ease-out; height: 100vh; overflow: auto; }
+.add-recurring-container h2 { 
+   font-size: 2.2rem;
+  grid-column: 1 / -1;
   display: flex;
-  flex-direction: column;
-  gap: 1.35rem; /* 20px */
-  margin-bottom: 3rem; /* 50px */
-  max-width: 700px;
- 
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+ color:#FFC107;
 }
 
-.recurring-form label {
-  font-weight: 600;
-  margin-bottom: 0.625rem; /* 10px */
-  color: #000;
-  font-size: 1.4rem;
-  user-select: none;
+.recurring-form { order: 1; width: min(820px, 100%); background: var(--card-bg); color: var(--text); border-radius: 16px; border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent); box-shadow: 0 24px 60px rgba(0,0,0,.35); padding: 26px 22px; display: grid; grid-template-columns: repeat(12, 1fr); row-gap: 14px; max-height: calc(100vh - 160px); overflow: auto; position: relative; }
+.recurring-form::before { content:''; position:absolute; top:0; left:0; right:0; height:4px; border-top-left-radius:16px; border-top-right-radius:16px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+.recurring-form label { font-size: 1.40rem; font-weight: 600; color:#222; grid-column: 1 / span 12; }
+.recurring-form input, .recurring-form select, .recurring-form textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--input-border); font-size: 1.30rem; color:#111827; background:#fff; grid-column: 1 / span 12; transition: border-color .2s, box-shadow .2s, background .2s; }
+.recurring-form input:hover, .recurring-form select:hover, .recurring-form textarea:hover { border-color: var(--input-border-hover); }
+.recurring-form input:focus, .recurring-form select:focus, .recurring-form textarea:focus { border-color: var(--accent-dark); outline:none; box-shadow: 0 0 0 4px var(--focus-ring); background-color:#fffef5; }
+@media (min-width: 900px) { .recurring-form label { grid-column:1 / span 4; align-self:center; } .recurring-form label + input, .recurring-form label + select, .recurring-form label + textarea { grid-column:5 / span 8; } }
+.recurring-form button { justify-self:center; min-width:200px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0d1117; font-weight:800; padding:14px 18px; border:none; border-radius:12px; cursor:pointer; font-size:1.15rem; transition: transform .2s, box-shadow .25s, filter .25s; box-shadow:0 10px 26px rgba(255,215,0,.35); margin-top: 8px; }
+.recurring-form button:hover { filter: brightness(.95) saturate(1.05); transform: translateY(-2px) scale(1.02); box-shadow:0 14px 30px rgba(0,0,0,.25); }
+.recurring-form button:active { transform: translateY(0); }
+
+/* Existing list above overlay */
+.existing-recurring-container { order: 2; position: relative; width: min(1100px, 95vw); max-height: 40vh; overflow: auto; padding: 1.25rem 1rem; background: #f8f9fa; border-radius: 12px; box-shadow: 0 12px 28px rgba(0,0,0,.25); z-index: 1001; transition: opacity .18s ease, transform .18s ease, visibility 0s linear 0s; }
+.existing-recurring-container h3 { margin-bottom: 1rem; font-weight: 700; color: var(--accent-dark); font-size: 1.6rem; }
+.recurring-table { width: 100%; border-collapse: collapse; font-size: 1rem; color: #000; min-width: 700px; }
+.recurring-table thead th { background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#0d1117; padding:.625rem .75rem; border-bottom:2px solid #ddd; font-weight:700; text-align:center; }
+.recurring-table tbody tr { border-bottom: 1px solid #ddd; }
+.recurring-table tbody tr:nth-child(even) { background:#f2f2f2; }
+.recurring-table tbody td { padding:.625rem .75rem; vertical-align: middle; color:#555; font-size: 1.1rem; text-align:center; }
+.recurring-table td button { margin-right: 10px; padding: 6px 14px; font-size: 1rem; border:none; border-radius:8px; cursor:pointer; font-weight:700; transition: transform .2s, filter .2s; }
+.recurring-table td button:hover { transform: scale(1.05); filter: brightness(.95);  background: linear-gradient(135deg, #00e1ff, #3c00ff); }
+.edit-btn { background:#1976d2; color:#fff; } .edit-btn:hover { background:#115293; }
+.delete-btn { background:#e53935; color:#fff; } .delete-btn:hover { background:#ab2c28; }
+.save-btn { background:#43a047; color:#fff; } .save-btn:hover { background:#2e7d32; }
+.cancel-btn { background:#9e9e9e; color:#fff; } .cancel-btn:hover { background:#616161; }
+
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 600px) { .existing-recurring-container { max-height: 48vh; } }
+
+/* Interactions: hide existing list while interacting with the form */
+.recurring-form:hover + .existing-recurring-container {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
 }
 
-.recurring-form input,
-.recurring-form select,
-.recurring-form textarea {
-  width: 97%;
-  padding: 0.875rem 1rem; /* 14px 16px */
-  border-radius: 12px;
-  border: 1.8px solid #ddd;
-  font-size: 1.3rem;
-  font-family: inherit;
-  color: #000;
-  resize: vertical;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.recurring-form input::placeholder,
-.recurring-form textarea::placeholder {
-  color: #aaa;
-  font-style: italic;
-}
-
-.recurring-form input:focus,
-.recurring-form select:focus,
-.recurring-form textarea:focus {
-  border-color: #1e88e5;
-  outline: 2px solid #90caf9; /* better focus for accessibility */
-  box-shadow: 0 0 12px rgba(30, 136, 229, 0.6);
-  background-color: #f0f7ff;
-}
-
-/* Buttons */
-.recurring-form button {
-  background: linear-gradient(90deg, #1e88e5, #1565c0);
-  color: #fff;
-  font-weight: 700;
-  padding: 1rem 0;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 1.25rem;
-  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.2s ease;
-  user-select: none;
-  box-shadow: 0 6px 16px rgba(30, 96, 229, 0.45);
-  letter-spacing: 0.02em;
-  margin-top: 10px;
-}
-
-.recurring-form button:hover {
-  background: linear-gradient(90deg, #1565c0, #0d3d7a);
-  box-shadow: 0 8px 20px rgba(13, 61, 122, 0.75);
-  transform: translateY(-2px);
-}
-
-.recurring-form button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(13, 61, 122, 0.6);
-}
-
-/* Table of Recurring Items */
-.existing-recurring-container {
-  margin: 2rem auto 3rem;
-  max-width: 1500px;
-  padding: 1.25rem 1rem; /* 20px */
-  background: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* allow horizontal scroll on small screens */
-}
-
-.existing-recurring-container h3 {
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: #000000;
-  font-size: 2.2rem;
-}
-
-.recurring-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1rem;
-  color: #000000;
-  min-width: 600px; /* ensures table doesn’t get too squeezed */
-}
-
-.recurring-table thead th {
-  background-color: #4caf50; /* Green header, same as income table */
-  color: white;
-  padding: 0.625rem 0.75rem;
-  border-bottom: 2px solid #ddd;
-  font-weight: 700;
-  text-align: center;
-}
-
-.recurring-table tbody tr {
-  border-bottom: 1px solid #ddd;
-}
-
-.recurring-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.recurring-table tbody td {
-  padding: 0.625rem 0.75rem;
-  vertical-align: middle;
-  color: #555;
-  font-size: 1.2rem;
-  text-align: center;
-}
-
-/* Buttons inside table cells */
-.recurring-table td button {
-  margin-right: 10px; /* spacing between buttons */
-  padding: 6px 14px;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  user-select: none;
-  outline-offset: 2px;
-  width: auto;
-}
-
-.recurring-table td button:focus-visible {
-  outline: 2px solid #90caf9;
-  outline-offset: 2px;
-}
-
-/* Button Colors (same as AddIncome) */
-.edit-btn {
-  background-color: #1976d2;
-  color: white;
-}
-
-.edit-btn:hover {
-  background-color: #115293;
-}
-
-.delete-btn {
-  background-color: #e53935;
-  color: white;
-}
-
-.delete-btn:hover {
-  background-color: #ab2c28;
-}
-
-.save-btn {
-  background-color: #43a047;
-  color: white;
-}
-
-.save-btn:hover {
-  background-color: #2e7d32;
-}
-
-.cancel-btn {
-  background-color: #9e9e9e;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background-color: #616161;
-}
-
-/* Input fields inside editable rows */
-.recurring-table tbody tr input[type="text"],
-.recurring-table tbody tr input[type="number"],
-.recurring-table tbody tr input[type="date"],
-.recurring-table tbody tr select {
-  width: 100%;
-  padding: 6px 10px;
-  box-sizing: border-box;
-  font-size: 1.1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.recurring-table tbody tr input[type="text"]:focus,
-.recurring-table tbody tr input[type="number"]:focus,
-.recurring-table tbody tr input[type="date"]:focus,
-.recurring-table tbody tr select:focus {
-  border-color: #1e88e5;
-  outline: none;
-  box-shadow: 0 0 8px rgba(30, 136, 229, 0.6);
-  background-color: #f0f7ff;
-}
-
-/* Button hover scale effect */
-.recurring-table td button:hover {
-  transform: scale(1.05);
-}
-
-/* Responsive tweaks */
-@media (max-width: 480px) {
-  .add-recurring-container {
-    padding: 25px 20px;
-  }
-
-  .recurring-form {
-    gap: 1rem;
-  }
-
-  .recurring-form button {
-    font-size: 1.1rem;
-    padding: 0.875rem 0;
-  }
-
-  .recurring-table,
-  .existing-recurring-container {
-    min-width: unset; /* allow table to shrink */
-  }
-
-  .recurring-table th,
-  .recurring-table td {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.6rem;
-  }
-
-  .recurring-table td button {
-    padding: 5px 8px;
-    font-size: 0.8rem;
-  }
-}
+/* Darken overlay backdrop during interaction */
+.add-recurring-container:has(.recurring-form:hover) { background: rgba(0,0,0,.85); }

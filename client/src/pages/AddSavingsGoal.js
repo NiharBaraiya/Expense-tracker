@@ -1,9 +1,11 @@
 // pages/AddSavingsGoal.js
 import React, { useState, useEffect } from "react";
+import useBodyScrollLock from "../utils/useBodyScrollLock";
 import API from "../api";
 import "./AddSavingsGoal.css";
 
 const AddSavingsGoal = () => {
+  useBodyScrollLock(true);
   const [goalAmount, setGoalAmount] = useState("");
   const [deadline, setDeadline] = useState("");
   const [goals, setGoals] = useState([]);
@@ -48,6 +50,8 @@ const AddSavingsGoal = () => {
       setEditingId(null);
       setGoalAmount("");
       setDeadline("");
+      // Blur active element so the existing list/background reappear (focus mode off)
+      document.activeElement?.blur?.();
     } catch (error) {
       console.error("Error saving goal:", error);
       alert("⚠️ Something went wrong!");
@@ -76,13 +80,13 @@ const AddSavingsGoal = () => {
     <>
       {/* Form Container */}
       <div className="add-saving-container">
-        <h2>🎯 {editingId ? "Edit Savings Goal" : "Set Savings Goal"}</h2>
+        
         <form onSubmit={handleSaveGoal} className="saving-form">
+          <h2>🎯 {editingId ? "Edit Savings Goal" : "Set Savings Goal"}</h2>
           <div className="form-group">
-            <label>Target Amount</label>
-            <br></br>
-            <br></br>
+            <label htmlFor="goalAmount">Target Amount</label>
             <input
+              id="goalAmount"
               type="number"
               value={goalAmount}
               onChange={(e) => setGoalAmount(e.target.value)}
@@ -90,18 +94,18 @@ const AddSavingsGoal = () => {
               required
             />
           </div>
-
+<br></br>
+<br></br>
           <div className="form-group">
-            <label>Deadline</label>
-            <br></br>
-            <br></br>
+            <label htmlFor="deadline">Deadline</label>
             <input
+              id="deadline"
               type="date"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
             />
           </div>
-
+<br></br>
           <button type="submit" className="save-btn">
             {editingId ? "Update Goal" : "Save Goal"}
           </button>
@@ -120,13 +124,12 @@ const AddSavingsGoal = () => {
             </button>
           )}
         </form>
-      </div>
 
-      {/* Existing Goals Table - Outside the Container */}
-      {goals.length > 0 && (
-        <div className="saving-list-container">
-          <h3>📋 Existing Savings Goals</h3>
-          <table className="saving-table">
+        {/* Existing Goals Table placed after form inside overlay */}
+        {goals.length > 0 && (
+          <div className="saving-list-container">
+            <h3>📋 Existing Savings Goals</h3>
+            <table className="saving-table">
             <thead>
               <tr>
                 <th>Amount</th>
@@ -151,8 +154,9 @@ const AddSavingsGoal = () => {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </>
   );
 };

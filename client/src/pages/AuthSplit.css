@@ -1,0 +1,177 @@
+/* Shared split layout for Login and Register to match the provided design */
+
+:root {
+  /* Dark + Gold theme tokens */
+  --gold-1: #FFD700; /* primary gold */
+  --gold-2: #FFC107; /* secondary gold */
+  --gold-3: #B8860B; /* dark golden accent */
+  --ink: #0d1117; /* deep slate */
+  --muted: #9aa2b1;
+  --border: #2b2f36;
+  --card: #ffffff; /* keep left card light for readability */
+}
+
+/* Overlay container comes from AddBudget.css (.add-budget-container) */
+
+.auth-split-card {
+  width: min(980px, 96vw);
+  background: var(--card);
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 24px 60px rgba(0,0,0,.35);
+  border-radius: 26px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  isolation: isolate;
+}
+
+.auth-left {
+  background: #ffffff;
+  padding: clamp(20px, 5vw, 48px);
+}
+
+.auth-left .auth-title {
+  margin: 0 0 12px;
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 800;
+  color: #1a1a1a;
+  text-align: left;
+}
+
+.social-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 8px 0 18px;
+}
+.social-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.social-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,.12); border-color: #d1d5db; }
+.social-btn:focus-visible { outline: 3px solid rgba(0,114,255,.35); outline-offset: 2px; }
+
+/* Screen-reader only utility */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0, 0, 1px, 1px); white-space: nowrap; border: 0;
+}
+
+/* Brand accents for social buttons (simple, no logos) */
+.social-btn.google { color: #ea4335; }
+.social-btn.google:hover { border-color: #ea4335; box-shadow: 0 8px 18px rgba(234,67,53,.25); }
+.social-btn.facebook { color: #1877f2; }
+.social-btn.facebook:hover { border-color: #1877f2; box-shadow: 0 8px 18px rgba(24,119,242,.25); }
+.social-btn.github { color: #111827; }
+.social-btn.github:hover { border-color: #111827; box-shadow: 0 8px 18px rgba(17,24,39,.22); }
+.social-btn.linkedin { color: #0a66c2; }
+.social-btn.linkedin:hover { border-color: #0a66c2; box-shadow: 0 8px 18px rgba(10,102,194,.25); }
+
+.auth-left .hint-line {
+  color: #9ca3af;
+  font-size: 0.95rem;
+  margin-bottom: 14px;
+}
+
+.field-label { font-weight: 700; color: #111827; margin: 12px 0 8px; }
+.input-with-icon { position: relative; display: flex; align-items: center; }
+.input-with-icon .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 18px; color: var(--muted); pointer-events: none; }
+.input-with-icon input {
+  width: 100%;
+  padding: 12px 14px 12px 42px;
+  font-size: 1rem;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #111827;
+  transition: border-color .2s ease, box-shadow .2s ease;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.03);
+}
+.input-with-icon input::placeholder { color: #9ca3af; }
+.input-with-icon input:focus { outline: none; border-color: var(--gold-3); box-shadow: 0 0 0 4px rgba(255,215,0,.22), inset 0 1px 1px rgba(0,0,0,.03); }
+
+.password-field { position: relative; }
+.password-field .pwd-toggle {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  width: 28px; height: 28px;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+  padding: 0; border-radius: 999px; cursor: pointer; color: var(--muted);
+}
+.password-field .pwd-toggle:hover { background: #fff8e1; color: #a97800; }
+
+.left-footer { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 6px; }
+.left-footer .muted { color: #64748b; text-decoration: none; }
+.left-footer .muted:hover { text-decoration: underline; }
+
+.btn-primary {
+  width: 100%;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, var(--gold-2), var(--gold-1));
+  color: #ffffff;
+  font-weight: 800;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  box-shadow: 0 10px 26px rgba(255,215,0,.35);
+  transition: transform .18s ease, box-shadow .25s ease;
+}
+.btn-primary:hover { transform: translateY(-2px) scale(1.01); box-shadow: 0 14px 30px rgba(0,0,0,.35); }
+.btn-primary:active { transform: translateY(0); }
+.btn-primary[disabled] { opacity: .85; cursor: not-allowed; }
+
+.auth-right {
+  background: linear-gradient(135deg, #0b0f14 0%, #0d1117 100%);
+  color: #ffffff;
+  padding: clamp(24px, 6vw, 56px);
+  display: grid;
+  place-content: center;
+  text-align: center;
+  position: relative;
+  border-top-left-radius: 120px;
+  border-bottom-left-radius: 120px;
+}
+/* subtle gold sheen */
+.auth-right::after {
+  content: '';
+  position: absolute; inset: 0; pointer-events: none; border-top-left-radius: 120px; border-bottom-left-radius: 120px;
+  background: radial-gradient(1200px 400px at 120% -20%, rgba(255,215,0,.18), transparent 60%);
+}
+
+.auth-right .title {
+  margin: 0 0 8px; font-size: clamp(22px, 2.4vw, 30px); font-weight: 900; letter-spacing: .2px;
+}
+.auth-right .subtitle { margin: 6px auto 18px; max-width: 32ch; opacity: .95; }
+.btn-outline {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 160px; padding: 12px 18px; font-weight: 800; border-radius: 14px;
+  background: transparent; color: var(--gold-1); border: 2px solid rgba(255,215,0,.85);
+  cursor: pointer; transition: background .2s ease, transform .18s ease;
+}
+.btn-outline:hover { background: rgba(255,215,0,.12); transform: translateY(-2px); }
+.btn-outline:active { transform: translateY(0); }
+
+.switch-footnote { text-align: center; color: #6b7280; margin-top: 10px; }
+.switch-footnote a { color: #b48a00; font-weight: 700; text-decoration: none; }
+.switch-footnote a:hover { text-decoration: underline; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .auth-split-card { grid-template-columns: 1fr; }
+  .auth-right { border-top-left-radius: 0; border-bottom-left-radius: 26px; border-top-right-radius: 26px; }
+}

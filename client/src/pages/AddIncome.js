@@ -1,11 +1,11 @@
 // pages/AddIncome.js
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import API from "../api";
+import useBodyScrollLock from "../utils/useBodyScrollLock";
 import './AddIncome.css';
 
 const AddIncome = () => {
-  const navigate = useNavigate();
+  useBodyScrollLock(true);
   const [incomeList, setIncomeList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
@@ -46,6 +46,8 @@ const AddIncome = () => {
       setIncomeList([res.data, ...incomeList]);
       form.reset();
       alert("✅ Income added successfully!");
+      // Remove focus so the existing list becomes visible again
+      document.activeElement?.blur?.();
     } catch (err) {
       console.error("Error adding income:", err);
       alert("❌ Failed to add income!");
@@ -102,33 +104,34 @@ const AddIncome = () => {
     <>
       {/* Form container */}
       <div className="add-income-container">
-        <h2>💵 Add Income</h2>
+        
         <form className="income-form" onSubmit={handleAdd}>
-           <label>Income Title:</label>
-          <input name="title" placeholder="Income Title" required />
-          <label>Amount:</label>
-          <input name="amount" type="number" placeholder="Amount" required />
-            <label>Source:</label>
-          <input name="source" placeholder="Source (optional)" />
-          <label>Date:</label>
+          <h2>💵 Add Income</h2>
+           <label htmlFor="incomeTitle">Income Title:</label>
+          <input id="incomeTitle" name="title" placeholder="Income Title" required />
+          <label htmlFor="incomeAmount">Amount:</label>
+          <input id="incomeAmount" name="amount" type="number" placeholder="Amount" required />
+            <label htmlFor="incomeSource">Source:</label>
+          <input id="incomeSource" name="source" placeholder="Source (optional)" />
+          <label htmlFor="incomeDate">Date:</label>
           <input
+            id="incomeDate"
             name="date"
             type="date"
             defaultValue={new Date().toISOString().split("T")[0]}
             required
           />
-            <label>Notes:</label>
-          <textarea name="notes" placeholder="Notes (optional)" />
+            <label htmlFor="incomeNotes">Notes:</label>
+          <textarea id="incomeNotes" name="notes" placeholder="Notes (optional)" />
           <button type="submit">➕ Save Income</button>
           
         </form>
-      </div>
 
-      {/* List outside the form container */}
-      {incomeList.length > 0 && (
-        <div className="existing-incomes-container">
-          <h3 >📋 Existing Incomes</h3>
-          <table className="income-table">
+        {/* Existing list placed directly after the form, inside overlay */}
+        {incomeList.length > 0 && (
+          <div className="existing-incomes-container">
+            <h3 >📋 Existing Incomes</h3>
+            <table className="income-table">
             <thead>
               <tr>
                 <th>Date</th>
@@ -221,8 +224,9 @@ const AddIncome = () => {
               )}
             </tbody>
           </table>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </>
   );
 };

@@ -2,14 +2,17 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api";
-import "./Auth.css";
+import "./AddBudget.css";
+import "./AuthSplit.css";
 
 const Register = ({ onRegister }) => {
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({ username: "", email: "", password: "", confirmPassword: "" });
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  
+  // Google Sign-Up removed
 
   // Validate form fields
   const validateFields = () => {
@@ -22,6 +25,11 @@ const Register = ({ onRegister }) => {
 
     if (!form.password) errors.push("🔒 Password is required.");
     else if (form.password.length < 6) errors.push("🔒 Password must be at least 6 characters.");
+
+    if (!form.confirmPassword) errors.push("🔒 Confirm Password is required.");
+    else if (form.password && form.confirmPassword && form.password !== form.confirmPassword) {
+      errors.push("🔒 Password and Confirm Password do not match.");
+    }
 
     return errors;
   };
@@ -43,7 +51,8 @@ const Register = ({ onRegister }) => {
     setLoading(true);
 
     try {
-      const response = await API.post('/auth/register', form);
+      const payload = { username: form.username, email: form.email, password: form.password };
+      const response = await API.post('/auth/register', payload);
 
       const { token, username, userId } = response.data || {};
 
@@ -74,79 +83,104 @@ const Register = ({ onRegister }) => {
   };
 
   return (
-    <main className="auth-container" aria-labelledby="register-heading">
-      <div className="auth-brand">
-        <h1 id="register-heading" className="auth-title-small">
-          Expense Tracker & Smart Budgeting
-        </h1>
-        <p className="auth-subtitle">Create your account</p>
-      </div>
+  <div className="add-budget-container" aria-labelledby="register-heading">
+      <section className="auth-split-card" style={{ maxWidth: 1040 }}>
+        {/* Left: Sign Up form */}
+        <div className="auth-left">
+         
+          <h2 id="register-heading" className="auth-title">Sign Up</h2>
+         
 
-      <form className="auth-form" onSubmit={handleSubmit} noValidate>
-        {/* Username */}
-        <label htmlFor="register-username">Username</label>
-        <div className="input-with-icon">
-          <span className="input-icon" aria-hidden="true">👤</span>
-          <input
-            id="register-username"
-            name="username"
-            type="text"
-            value={form.username}
-            onChange={handleChange}
-            placeholder="Enter your username"
-            autoComplete="username"
-          />
+
+          <form onSubmit={handleSubmit} noValidate>
+            <label className="field-label" htmlFor="register-username">Username</label>
+            <div className="input-with-icon">
+              <span className="input-icon" aria-hidden="true">👤</span>
+              <input
+                id="register-username"
+                name="username"
+                type="text"
+                value={form.username}
+                onChange={handleChange}
+                placeholder="Enter your name"
+                autoComplete="username"
+                required
+              />
+            </div>
+
+            <label className="field-label" htmlFor="register-email">Email</label>
+            <div className="input-with-icon">
+              <span className="input-icon" aria-hidden="true">📧</span>
+              <input
+                id="register-email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                autoComplete="email"
+                required
+              />
+            </div>
+
+            <label className="field-label" htmlFor="register-password">Password</label>
+            <div className="input-with-icon password-field">
+              <span className="input-icon" aria-hidden="true">🔒</span>
+              <input
+                id="register-password"
+                name="password"
+                type={showPwd ? "text" : "password"}
+                value={form.password}
+                onChange={handleChange}
+                placeholder="Enter your Password"
+                autoComplete="new-password"
+                aria-describedby="pwd-hint-register"
+                required
+              />
+              <button
+                type="button"
+                className="pwd-toggle"
+                onClick={() => setShowPwd(prev => !prev)}
+                aria-pressed={showPwd}
+                aria-label={showPwd ? "Hide password" : "Show password"}
+              >
+                {showPwd ? "🔒" : "👁️"}
+              </button>
+            </div>
+
+            <label className="field-label" htmlFor="register-confirm">Confirm Password</label>
+            <div className="input-with-icon password-field">
+              <span className="input-icon" aria-hidden="true">🔒</span>
+              <input
+                id="register-confirm"
+                name="confirmPassword"
+                type={showPwd ? "text" : "password"}
+                value={form.confirmPassword}
+                onChange={handleChange}
+                placeholder="Confirm your Password"
+                autoComplete="new-password"
+                aria-describedby="pwd-hint-register"
+                required
+              />
+            </div>
+           
+
+            <button className="btn-primary" type="submit" disabled={loading}>
+              {loading ? "Registering..." : "SIGN UP"}
+            </button>
+            <div className="switch-footnote">Already have an account? <Link to="/login">Login</Link></div>
+          </form>
         </div>
 
-        {/* Email */}
-        <label htmlFor="register-email" className="label-margin-top">Email</label>
-        <div className="input-with-icon">
-          <span className="input-icon" aria-hidden="true">📧</span>
-          <input
-            id="register-email"
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Enter your email"
-            autoComplete="email"
-          />
-        </div>
-
-        {/* Password */}
-        <label htmlFor="register-password" className="label-margin-top">Password</label>
-        <div className="input-with-icon password-field">
-          <span className="input-icon" aria-hidden="true">🔒</span>
-          <input
-            id="register-password"
-            name="password"
-            type={showPwd ? "text" : "password"}
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Enter your password"
-            autoComplete="new-password"
-          />
-          <button
-            type="button"
-            className="pwd-toggle"
-            onClick={() => setShowPwd(prev => !prev)}
-            aria-pressed={showPwd}
-            aria-label={showPwd ? "Hide password" : "Show password"}
-          >
-            {showPwd ? "🔒" : "👁️"}
-          </button>
-        </div>
-
-        {/* Submit */}
-        <button className="auth-submit" type="submit" disabled={loading}>
-          {loading ? "Registering..." : "Register"}
-        </button>
-      </form>
-
-      <div className="login-redirect">
-        Already have an account? <Link to="/login">Login here</Link>
-      </div>
-    </main>
+        {/* Right: Switch to Login */}
+        <aside className="auth-right">
+        
+          <h3 className="title">Welcome Back!</h3>
+          <p className="subtitle">To keep connected with us please login with your personal info</p>
+          <button className="btn-outline" onClick={() => navigate('/login')}>SIGN IN</button>
+        </aside>
+      </section>
+    </div>
   );
 };
 

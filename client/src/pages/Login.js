@@ -2,16 +2,19 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api";
-import "./Auth.css";
+import "./AddBudget.css";
+import "./AuthSplit.css";
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(false);
+  // Remember-me removed for this layout; can be reintroduced later if needed
   const [showPwd, setShowPwd] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  // Google Sign-In removed
 
   // Validate email and password
   const validateFields = () => {
@@ -50,7 +53,7 @@ const Login = ({ onLogin }) => {
       localStorage.setItem("token", token);
       localStorage.setItem("userId", userId);
       localStorage.setItem("username", username || "");
-      if (remember) localStorage.setItem("remember", "1");
+  // Persist 'remember me' can be added here if required
 // fetch profile
 try {
   const profileRes = await API.get('/user/profile');
@@ -58,8 +61,8 @@ try {
   
   // pass profile
   if (onLogin) onLogin(profileData);  
-} catch (err2) {
-  console.error("Profile fetch after login error:", err2);
+} catch (error_) {
+  console.error("Profile fetch after login error:", error_);
   // you can still continue without profile or alert
 }
       if (onLogin) onLogin(username || "");
@@ -78,68 +81,84 @@ try {
   };
 
   return (
-    <main className="auth-container" aria-labelledby="login-heading">
-      <div className="auth-brand" style={{ textAlign: "center", marginBottom: 12 }}>
-        <h1 id="login-heading" className="auth-title-small">
-          Expense Tracker & Smart Budgeting
-        </h1>
-        <p>Sign in to your account</p>
-      </div>
+  <div className="add-budget-container" aria-labelledby="login-heading">
+      <section className="auth-split-card" style={{ maxWidth: 1040 }}>
+        {/* Left: Sign In form */}
+        <div className="auth-left">
+          <h2 id="login-heading" className="auth-title">Sign In</h2>
+{/* 
+          <div className="social-row" aria-label="Sign in with social">
+            <button className="social-btn google" type="button" onClick={() => handleSocial('Google')} title="Google" aria-label="Sign in with Google">G<span className="sr-only">oogle</span></button>
+            <button className="social-btn facebook" type="button" onClick={() => handleSocial('Facebook')} title="Facebook" aria-label="Sign in with Facebook">f<span className="sr-only">acebook</span></button>
+            <button className="social-btn github" type="button" onClick={() => handleSocial('GitHub')} title="GitHub" aria-label="Sign in with GitHub">GH<span className="sr-only"> GitHub</span></button>
+            <button className="social-btn linkedin" type="button" onClick={() => handleSocial('LinkedIn')} title="LinkedIn" aria-label="Sign in with LinkedIn">in<span className="sr-only"> LinkedIn</span></button>
+          </div>
 
-      <form className="auth-form" onSubmit={handleSubmit} noValidate>
-        {/* Email */}
-        <label htmlFor="login-email">Email</label>
-        <div className="input-with-icon">
-          <span className="input-icon" aria-hidden="true">📧</span>
-          <input
-            id="login-email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            autoComplete="email"
-          />
-        </div>
+          <div className="hint-line">or use your email password</div> */}
 
-        {/* Password */}
-        <label htmlFor="login-password" className="label-margin-top">Password</label>
-        <div className="input-with-icon password-field">
-          <span className="input-icon" aria-hidden="true">🔒</span>
-          <input
-            id="login-password"
-            type={showPwd ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            autoComplete="current-password"
-          />
-          <button
-            type="button"
-            className="pwd-toggle"
-            onClick={() => setShowPwd(prev => !prev)}
-            aria-pressed={showPwd}
-            aria-label={showPwd ? "Hide password" : "Show password"}
-          >
-            {showPwd ? "🔒" : "👁️"}
-          </button>
-        </div>
-
-        {/* Remember me */}
-        <div className="form-options">
         
-          <Link to="/forgot-password" className="muted">Forgot password?</Link>
+
+          <form onSubmit={handleSubmit} noValidate>
+            <label className="field-label" htmlFor="login-email">Email</label>
+            <div className="input-with-icon">
+              <span className="input-icon" aria-hidden="true">📧</span>
+              <input
+                id="login-email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                autoComplete="email"
+                required
+              />
+            </div>
+
+            <label className="field-label" htmlFor="login-password">Password</label>
+            <div className="input-with-icon password-field">
+              <span className="input-icon" aria-hidden="true">🔒</span>
+              <input
+                id="login-password"
+                type={showPwd ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                className="pwd-toggle"
+                onClick={() => setShowPwd(prev => !prev)}
+                aria-pressed={showPwd}
+                aria-label={showPwd ? "Hide password" : "Show password"}
+              >
+                {showPwd ? "🔒" : "👁️"}
+              </button>
+            </div>
+
+            <div className="left-footer">
+              <span></span>
+              <Link to="/forgot-password" className="muted">Forgot Your Password?</Link>
+            </div>
+            <button className="btn-primary" type="submit" disabled={loading}>
+              {loading ? "Signing in..." : "SIGN IN"}
+            </button>
+          </form>
+
+          <div className="switch-footnote">
+            Don’t have an account? <Link to="/register">Create an account</Link>
+          </div>
         </div>
 
-        {/* Submit */}
-        <button className="auth-submit" type="submit" disabled={loading}>
-          {loading ? "Signing in..." : "Sign in"}
-        </button>
-      </form>
+        {/* Right: Promo / switch to Sign Up */}
+        <aside className="auth-right">
 
-      <div className="login-redirect">
-        Don’t have an account? <Link to="/register">Create an account</Link>
-      </div>
-    </main>
+          <h3 className="title">Hello, Friend!</h3>
+          <p className="subtitle">Register with your personal details to use all site features</p>
+          <button className="btn-outline" onClick={() => navigate('/register')}>SIGN UP</button>
+        </aside>
+      </section>
+    </div>
   );
 };
 

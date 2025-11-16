@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from "react";
 import ViewExpenses from "./ViewExpenses"; // Adjust path if needed
 import API from "../api";
+import "./ViewTheme.css";
 
 const ViewBudgets = () => {
   const [budgets, setBudgets] = useState([]);
@@ -189,25 +190,30 @@ const ViewBudgets = () => {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>💰 View Budgets</h2>
+  <div className="view-container theme-bgr">
+    
 
       {budgets.length === 0 ? (
-        <p>No budgets found. Create one first!</p>
+        <p className="list-card" style={{ textAlign: "center" }}>No budgets found. Create one first!</p>
       ) : (
-        <div style={{ overflowX: "auto" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", background: "#fff" }}>
+        <div className="list-card" style={{ overflowX: "auto" }}>
+            <h2 className="view-heading">💰 View Budgets</h2>
+            <br></br>
+            <br></br>
+          <table className="data-table">
+            
             <thead>
-              <tr style={{ background: "#f4f4f4" }}>
-                <th style={thStyle}>Name</th>
-                <th style={thStyle}>Category</th>
-                <th style={thStyle}>Amount</th>
-                <th style={thStyle}>Spent</th>
-                <th style={thStyle}>Remaining</th>
-                <th style={thStyle}>Currency</th>
-                <th style={thStyle}>Dates</th>
-                <th style={thStyle}>Actions</th>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Spent</th>
+                <th>Remaining</th>
+                <th>Currency</th>
+                <th>Dates</th>
+                <th>Actions</th>
               </tr>
+              
             </thead>
             <tbody>
               {budgets.map((budget) => {
@@ -216,8 +222,8 @@ const ViewBudgets = () => {
 
                 if (editId === budget.id) {
                   return (
-                    <tr key={budget.id} style={{ background: "#fffae6" }}>
-                      <td style={tdStyle}>
+                    <tr key={budget.id} className="is-editing">
+                      <td>
                         <input
                           name="name"
                           value={editForm.name}
@@ -225,7 +231,7 @@ const ViewBudgets = () => {
                           placeholder="Name"
                         />
                       </td>
-                      <td style={tdStyle}>
+                      <td>
                         <input
                           name="category"
                           value={editForm.category}
@@ -233,7 +239,7 @@ const ViewBudgets = () => {
                           placeholder="Category"
                         />
                       </td>
-                      <td style={tdStyle}>
+                      <td>
                         <input
                           type="number"
                           name="amount"
@@ -242,13 +248,13 @@ const ViewBudgets = () => {
                           min="0"
                         />
                       </td>
-                      <td style={tdStyle}>
+                      <td>
                         {spent} {budget.currency}
                       </td>
-                      <td style={{ ...tdStyle, color: remaining < 0 ? "red" : "green" }}>
+                      <td className={remaining < 0 ? "remaining-negative" : "remaining-positive"}>
                         {remaining} {budget.currency}
                       </td>
-                      <td style={tdStyle}>
+                      <td>
                         <input
                           name="currency"
                           value={editForm.currency}
@@ -256,7 +262,7 @@ const ViewBudgets = () => {
                           placeholder="Currency"
                         />
                       </td>
-                      <td style={tdStyle}>
+                      <td>
                         <input
                           type="date"
                           name="startDate"
@@ -271,111 +277,102 @@ const ViewBudgets = () => {
                           onChange={handleEditChange}
                         />
                       </td>
-                      <td style={tdStyle}>
+                      <td>
                         <button
+                          className="btn btn-green"
                           onClick={handleSaveEdit}
-                          style={{ background: "green", color: "white", padding: "4px 8px", marginRight: 5, cursor: "pointer" }}
                         >
                           💾 Save
                         </button>
                         <button
+                          className="btn btn-ghost"
                           onClick={handleCancelEdit}
-                          style={{ padding: "4px 8px", cursor: "pointer" }}
                         >
                           ❌ Cancel
                         </button>
                       </td>
+                      
                     </tr>
+                    
                   );
                 }
 
                 return (
                   <tr key={budget.id}>
-                    <td style={tdStyle}>{budget.name}</td>
-                    <td style={tdStyle}>{budget.category}</td>
-                    <td style={tdStyle}>
+                    <td>{budget.name}</td>
+                    <td>{budget.category}</td>
+                    <td>
                       {budget.amount} {budget.currency}
                     </td>
-                    <td style={tdStyle}>
+                    <td>
                       {spent} {budget.currency}
                     </td>
-                    <td style={{ ...tdStyle, color: remaining < 0 ? "red" : "green" }}>
+                    <td className={remaining < 0 ? "remaining-negative" : "remaining-positive"}>
                       {remaining} {budget.currency}
                     </td>
-                    <td style={tdStyle}>{budget.currency}</td>
-                    <td style={tdStyle}>
+                    <td>{budget.currency}</td>
+                    <td className="actions-cell">
                       {budget.startDate} → {budget.endDate}
                     </td>
-                    <td style={tdStyle}>
+                    
+                    <td>
                       <button
+                        className="btn btn-blue"
                         onClick={() => setSelectedBudgetId(budget.id)}
-                        style={{
-                          background: "blue",
-                          color: "white",
-                          padding: "8px 8px",
-                          border: "none",
-                          cursor: "pointer",
-                          marginRight: 6,
-                        }}
                       >
                         View Expenses
                       </button>
                       <button
+                        className="btn btn-orange"
                         onClick={() => handleEditClick(budget)}
-                        style={{
-                          padding: "5px 7px",
-                          background: "orange",
-                          color: "white",
-                          marginRight: 6,
-                          cursor: "pointer",
-                        }}
                       >
                         ✏️ Edit
                       </button>
                       <button
+                        className="btn btn-red"
                         onClick={() => handleDelete(budget.id)}
-                        style={{
-                          padding: "6px 9px",
-                          background: "red",
-                          color: "white",
-                          cursor: "pointer",
-                        }}
                       >
                         Delete
                       </button>
                     </td>
+                    
                   </tr>
                 );
               })}
             </tbody>
+            
           </table>
+          <br></br>
+           <div  style={{ marginTop: 10 }}>
+        <button 
+          className="btn btn-blue"
+          onClick={() => window.location.href = "/add-budget"}
+        >
+          + Add New Budget  
+        </button>
+          
+      </div>
         </div>
       )}
-
+<br></br>
       {selectedBudgetId && (
-        <div style={{ marginTop: 40 }}>
+        <div style={{ width: 'min(1100px,95vw)' }}>
           <button
+            className="btn btn-ghost"
+            style={{ marginBottom: 10 }}
             onClick={() => setSelectedBudgetId(null)}
-            style={{ marginBottom: 10, padding: "6px 12px", cursor: "pointer" }}
           >
             ← Back to Budgets
           </button>
-          <ViewExpenses budgetId={selectedBudgetId} />
+          <br></br>
+          <br></br>
+          <ViewExpenses budgetId={selectedBudgetId} embedded />
+
         </div>
       )}
+     
     </div>
   );
-};
-
-const thStyle = {
-  padding: "10px",
-  border: "1px solid #ddd",
-  textAlign: "left",
-};
-
-const tdStyle = {
-  padding: "10px",
-  border: "1px solid #ddd",
 };
 
 export default ViewBudgets;

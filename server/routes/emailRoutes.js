@@ -15,17 +15,17 @@ router.post("/send-report", upload.single("pdf"), async (req, res) => {
       return res.status(400).json({ success: false, message: "PDF file is missing" });
     }
 
-    // Setup Gmail transporter
+    // Setup Gmail transporter via env
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "baraiyanihar106@gmail.com", // your Gmail
-        pass: "osrl pdvv eiwn mjhe",    // Gmail App Password
+        user: process.env.EMAIL_USER,
+        pass: (process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD || "").replace(/\s+/g, ""),
       },
     });
 
     const mailOptions = {
-      from: "baraiyanihar106@gmail.com",
+  from: process.env.EMAIL_USER,
       to: email,
       subject: subject || "Expense Tracker Report",
       text: text || "Here is your financial report from Expense Tracker.",

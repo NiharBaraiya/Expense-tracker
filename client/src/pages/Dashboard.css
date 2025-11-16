@@ -1,598 +1,362 @@
+/* ===============================
+   Dashboard Page Styles — Dark + Gold Theme (aligned with Home.css)
+   Font: Poppins/Inter, Base BG: #0d1117, Accent: #FFD700
+   NOTE: Class names preserved to avoid JSX changes
+   =============================== */
 
+/* Base Container */
 .dashboard-container {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Poppins', 'Inter', sans-serif;
+  background-color: #0d1117;
+  color: #e0e0e0;
   padding: 40px 20px;
-  background-color: #f4f6f8;
+  box-sizing: border-box;
   min-height: 100vh;
-  color: #333;
+ margin-left: 260px;
+  transition: padding-left 0.25s ease;
 }
 
-.dark-mode .dashboard-container {
-  background-color: #1e1e1e;
-  color: #ddd;
-}
-
+/* Welcome / Hero */
 .dashboard-welcome {
-  background: linear-gradient(135deg, #2196f3, #21cbf3);
-  padding: 60px 20px;
-  color: rgb(0, 0, 0);
-  border-radius: 12px;
-  margin-bottom: 40px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #1f1c24, #21252b);
+  padding: 60px 24px;
+  color: #ffffff;
+  border-radius: 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+  border-left: 5px solid #FFD700;
+  border-right: 5px solid #FFD700;
   text-align: center;
 }
 
 .dashboard-welcome h1 {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 10px;
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: #FFD700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .dashboard-welcome h2 {
-  font-size: 1.5rem;
-  font-weight: 400;
-  color: #000000;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #b0b0b0;
 }
+
 .dashboard-welcome .username {
-  color: #000000; /* highlight username */
+  color: #FFD700;
+  font-weight: 700;
 }
-
-
 
 .dashboard-welcome .date-message {
-  font-size: 1.15rem;
-  color: #000000;
- 
+  font-size: 1rem;
+  color: #cfcfcf;
 }
-/* ===== Action Buttons Feature Cards Container ===== */
+
+/* Actions (Feature Cards) */
 .action-buttons-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
-/* ===== Feature Card Styling ===== */
 .feature-card {
-  background-color: white;
-  padding: 24px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  background: rgb(0, 0, 0);
+  padding: 22px 18px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  text-align: left;
   flex: 1 1 220px;
-  max-width: 260px;
+  max-width: 280px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  transition: transform 0.2s, box-shadow 0.3s, background 0.3s;
+  transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px) scale(1.02);
+  border: 1px solid #FFD700;
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.25);
 }
 
 .feature-card h3 {
-  margin-bottom: 10px;
-  font-size: 1.25rem;
-  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 1.2rem;
+  color: #FFD700;
+  font-weight: 700;
 }
 
 .feature-card p {
-  color: #555;
+  color: #cfcfcf;
   font-size: 0.95rem;
-  margin-bottom: 15px;
+  margin-bottom: 14px;
 }
 
-/* ===== Buttons inside Feature Cards ===== */
 .feature-card .action-button {
   width: 100%;
   padding: 10px 16px;
   font-size: 0.95rem;
-  border-radius: 8px;
-  background-color: #2196f3;
-  color: white;
+  border-radius: 10px;
+  background: #7C4DFF;
+  color: #0d1117;
   border: none;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s, transform 0.2s;
+  font-weight: 800;
+  transition: all 0.25s ease;
 }
 
 .feature-card .action-button:hover {
-  background-color: #1976d2;
-  transform: scale(1.03);
+  background: linear-gradient(135deg, #00e1ff, #3c00ff);
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(255, 215, 0, 0.25);
 }
-/* Container for net summary cards */
+
+/* Net Summary cards */
 .net-cards-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 16px;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
-/* Each Net Card */
 .net-card {
-  background: linear-gradient(145deg, #ffffff);
-  flex: 1 1 180px;
-  padding: 22px 18px;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.502);
+  background: rgb(0, 0, 0);
+  color: #e0e0e0;
+  flex: 1 1 200px;
+  padding: 20px 18px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
   text-align: center;
-  transition: transform 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
-  cursor: default;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
-/* Hover effect */
 .net-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18), 0 0 8px rgba(33, 150, 243, 0.1);
-  background: linear-gradient(145deg, #ffffff, #ffffff);
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.25);
+  border: 1px solid #FFD700;
 }
 
-/* Dark Mode */
-.dark-mode .net-card {
-  background: linear-gradient(145deg, #2b2b2b, #1f1f1f);
-  color: #ddd;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.4), inset 0 -2px 6px rgba(255,255,255,0.05);
-}
-
-.dark-mode .net-card:hover {
-  background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
-  box-shadow: 0 14px 28px rgba(0,0,0,0.6), 0 0 10px rgba(100, 181, 246, 0.2);
-}
-
-/* Card Heading */
 .net-card h4 {
-  font-size: 1.5rem;
-  margin-bottom: 12px;
-  font-weight: 600;
-  color: #2196f3;
-  letter-spacing: 0.5px;
-
-}
-
-.dark-mode .net-card h4 {
-  color: #64b5f6;
-}
-
-/* Card Amount */
-.net-card p {
   font-size: 1.3rem;
+  margin-bottom: 10px;
   font-weight: 700;
-  color: #1e1e1e;
+  color: #FFD700;
+}
+
+.net-card p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
   margin: 0;
-  background: linear-gradient(90deg, black);
- 
-  -webkit-text-fill-color: transparent;
 }
 
-.dark-mode .net-card p {
-  background: linear-gradient(90deg, black);
-
-  -webkit-text-fill-color: transparent;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .net-cards-container {
-    flex-direction: column;
-    gap: 14px;
-    align-items: center;
-  }
-
-  .net-card {
-    flex: 1 1 85%;
-  }
-}
-
-@media (max-width: 480px) {
-  .net-card {
-    padding: 18px 14px;
-  }
-
-  .net-card p {
-    font-size: 1.15rem;
-  }
-
-  .net-card h4 {
-    font-size: 1rem;
-  }
-}
-
-/* ===== Dark Mode Support ===== */
-.dark-mode .feature-card {
-  background-color: #2a2a2a;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.dark-mode .feature-card h3 {
-  color: #ddd;
-}
-
-.dark-mode .feature-card p {
-  color: #bbb;
-}
-
-.dark-mode .feature-card .action-button {
-  background-color: #2196f3;
-}
-
-.dark-mode .feature-card .action-button:hover {
-  background-color: #1976d2;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .action-buttons-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .feature-card {
-    max-width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-  .feature-card h3 { font-size: 1.1rem; }
-  .feature-card p { font-size: 0.85rem; }
-  .feature-card .action-button { font-size: 0.85rem; padding: 8px 14px; }
-}
-/* ===== PDF Report Feature Card ===== */
-.feature-card.pdf-report-card .action-button {
-  width: 100%;
-  padding: 10px 16px;
-  font-size: 0.95rem;
-  border-radius: 8px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s, transform 0.2s;
-  display: block; /* important for nested button */
-  text-align: center;
-}
-
-.feature-card.pdf-report-card .action-button:hover {
-  background-color: #388e3c;
-  transform: scale(1.03);
-}
-
-.feature-card.pdf-report-card h3 {
-  margin-bottom: 10px;
-  font-size: 1.25rem;
-  color: #2c3e50;
-}
-
-.feature-card.pdf-report-card p {
-  color: #555;
-  font-size: 0.95rem;
-  margin-bottom: 15px;
-}
-
-/* PDF Export Button */
-.pdf-export-button {
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  padding: 16px 28px;       /* Bigger padding for larger button */
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  font-size: 1.1rem;        /* Larger text */
-  display: inline-block;
-}
-
-.pdf-export-button:hover {
-  background-color: #1976d2;
-  transform: scale(1.03);
-}
-
-/* Expense Summary Card */
-.feature-card.expense-summary-card {
-  background-color: white;
-  padding: 24px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: left;
-  margin-bottom: 30px;
-  display: flex;
-  flex-direction: column; /* Column layout for heading + list */
-  gap: 12px;
-}
-
-/* Dark Mode */
-.dark-mode .feature-card.expense-summary-card {
-  background-color: #2a2a2a;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-.feature-card.expense-summary-card h3.summary-title {
-  font-size: 1.4rem;
-  color: #2c3e50;
-  margin-bottom: 10px;
-}
-
-.dark-mode .feature-card.expense-summary-card h3.summary-title {
-  color: #ddd;
-}
-
-.feature-card.expense-summary-card ul.expense-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 8px;
-}
-
-.feature-card.expense-summary-card ul.expense-list li {
-  font-size: 1.05rem;
-  color: #555;
-}
-
-.dark-mode .feature-card.expense-summary-card ul.expense-list li {
-  color: #ccc;
-}
-
-.feature-card.expense-summary-card .alert {
-  color: #d32f2f;
-  font-weight: 600;
-  margin-top: 10px;
-}
 /* Expense Summary Section */
 .expense-summary {
-  margin-bottom: 40px;
+  background: rgb(0, 0, 0);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
-.expense-summary .summary-title {
-  font-size: 1.6rem;
-  margin-bottom: 20px;
-  color: #2c3e50;
+.expense-summary .summary-title,
+.expense-summary h3 {
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  color: #FFD700;
 }
 
-.dark-mode .expense-summary .summary-title {
-  color: #ddd;
-}
-
-/* Container for all cards */
 .expense-cards-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 14px;
 }
 
-/* Each Expense Card */
 .expense-card {
-  background-color: #ffffff;
-  flex: 1 1 140px; /* Flexible width with min 140px */
+  background: rgba(31, 28, 36, 0.85);
+  color: #e0e0e0;
+  flex: 1 1 160px;
   padding: 18px 16px;
-  border-radius: 20px;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.288);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
   text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-color: black;
+  transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
 .expense-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(0,0,0,0.12);
-}
-
-/* Dark Mode */
-.dark-mode .expense-card {
-  background-color: #333;
-  color: #ffffff;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
-}
-
-/* Card Heading */
-.expense-card h4 {
-  font-size: 1.4rem;
-  margin-bottom: 8px;
-  color: #2196f3;
-}
-
-.dark-mode .expense-card h4 {
-  color: #64b5f6;
-}
-
-/* Card Amount */
-.expense-card p {
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: #333;
-}
-
-.dark-mode .expense-card p {
-  color: #ffffff;
-}
-
-/* Alert */
-.expense-summary .alert {
-  color: #d32f2f;
-  font-weight: 600;
-  margin-top: 15px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .expense-cards-container {
-    flex-direction: column;
-    gap: 12px;
-  }
-}
-
-
-
-/* ===== Dark Mode Support ===== */
-.dark-mode .feature-card.pdf-report-card {
-  background-color: #2a2a2a;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.dark-mode .feature-card.pdf-report-card h3 {
-  color: #ddd;
-}
-
-.dark-mode .feature-card.pdf-report-card p {
-  color: #bbb;
-}
-
-.dark-mode .feature-card.pdf-report-card .action-button {
-  background-color: #4caf50;
-}
-
-.dark-mode .feature-card.pdf-report-card .action-button:hover {
-  background-color: #388e3c;
-}
-
-/* ===== Responsive ===== */
-@media (max-width: 768px) {
-  .feature-card.pdf-report-card {
-    max-width: 90%;
-  }
-}
-
-@media (max-width: 480px) {
-  .feature-card.pdf-report-card h3 { font-size: 1.1rem; }
-  .feature-card.pdf-report-card p { font-size: 0.85rem; }
-  .feature-card.pdf-report-card .action-button { font-size: 0.85rem; padding: 8px 14px; }
-}
-/* ===== OVERALL SUMMARY ===== */
-.overall-summary {
-  background-color: #ffffff;
-  padding: 28px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 32px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border:1px solid #000000;
-  height:fit-content;
-}
-
-.overall-summary:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border: 1px solid #FFD700;
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.25);
 }
 
-.overall-summary .expense-summary {
-  font-size: 1.6rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #111827;
- height: fit-content;
+.expense-card h4 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+  color: #FFD700;
+}
 
-  
+.expense-card p {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.expense-summary .alert,
+.alert {
+  color: #ff7676;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+/* Overall summary (wrapper card) */
+.overall-summary,
+.budget-progress,
+.net-summary,
+.savings-goals,
+.debts,
+.recurring-expenses {
+  background: rgb(0, 0, 0);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  margin-bottom: 24px;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.overall-summary:hover,
+.budget-progress:hover,
+.net-summary:hover,
+.savings-goals:hover,
+.debts:hover,
+.recurring-expenses:hover {
+  transform: translateY(-4px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.25);
+}
+
+.overall-summary h3,
+.budget-progress h3,
+.net-summary h3,
+.savings-goals h3,
+.debts h3,
+.recurring-expenses h3 {
+  font-size: 1.4rem;
+  margin-bottom: 16px;
+  color: #FFD700;
 }
 
 .overall-summary p {
-  font-size: 1.5rem;
-  color: #000000;
-  
-}
-.recharts-tooltip-wrapper {
-  
-  font-size: 1.5rem !important;
-  background: #f9fafb !important;
-  border-radius: 6px !important;
-  border: 1px solid #000000 !important;
-  padding: 8px !important;
-  color: #111827 !important;
+  font-size: 1.15rem;
+  color: #e0e0e0;
 }
 
-.recharts-legend-wrapper {
-  font-size: 1.2rem;
-  color: #374151;
-}
-
-.recharts-label-list text {
-  font-size: 1.25rem;
-  fill: #111827;
-  font-weight: 600;
-}
-
-/* Container for both charts */
+/* Charts */
 .expense-charts-container {
   display: flex;
-  gap: 10px;             
-  margin-top: 32px;
- 
+  gap: 22px;
+  margin-top: 24px;
+  flex-wrap: wrap;
 }
 
-/* Individual chart card */
 .chart-card {
-  background-color: #ffffff;
-       /* Each card takes ~50% width */
-  min-width: 660px;      /* Prevent too small on small screens */
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
+  background: rgb(0, 0, 0);
+  min-width: 583px;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+  border: 1px solid rgba(255, 215, 0, 0.15);
 }
 
 .chart-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 28px rgba(255, 215, 0, 0.25);
+  border: 1px solid #FFD700;
 }
 
-/* Chart title */
-.chart-card h3.expense-summary {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #111827;
+.chart-card h3.expense-summary,
+.overall-summary h3.expense-summary,
+.savings-goals h3.expense-summary,
+.budget-progress h3.expense-summary {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: #FFD700;
   text-align: center;
+  /* Reset accidental card styles when class is reused on headings */
+  background: transparent;
+  padding: 0;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
 }
 
-/* Chart card text */
 .chart-card p {
-  font-size: 1rem;
-  color: #374151;
+  font-size: 0.95rem;
+  color: #cfcfcf;
   text-align: center;
 }
-/* Debts & Loans Section */
-.debts {
-  background-color: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-  margin-bottom: 24px;
+
+/* Recharts overrides */
+.recharts-tooltip-wrapper {
+  font-size: 0.95rem !important;
+  background: #1f1c24 !important;
+  border-radius: 8px !important;
+  border: 1px solid #FFD700 !important;
+  padding: 8px !important;
+  color: #ffffff !important;
 }
 
-.section-header {
+.recharts-legend-wrapper {
+  font-size: 0.95rem;
+  color: #e0e0e0;
+}
+
+.recharts-label-list text {
+  font-size: 0.95rem;
+  fill: #e0e0e0;
+  font-weight: 600;
+}
+
+/* Debts & Loans */
+.debts .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
-.section-header h3 {
-  font-size: 1.5rem;
-  color: #333;
+.debts .section-header h3 {
+  font-size: 1.3rem;
+  color: #FFD700;
 }
 
 .add-btn {
-  background-color: #4caf50;
-  color: #fff;
+  background: linear-gradient(135deg, #FFD700, #FFC107);
+  color: #0d1117;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
-  font-weight: 600;
-  transition: background 0.3s ease;
+  font-weight: 800;
+  transition: all 0.25s ease;
 }
 
 .add-btn:hover {
-  background-color: #45a049;
+  background: linear-gradient(135deg, #00e1ff, #3c00ff);
+  color: #ffffff;
 }
 
-/* Table Styles */
+/* Tables */
 .debts-table-container {
   overflow-x: auto;
 }
@@ -604,238 +368,118 @@
 
 .debts-table th,
 .debts-table td {
-  padding: 12px 16px;
+  padding: 12px 14px;
   text-align: left;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15);
 }
 
 .debts-table thead {
-  background-color: #f5f5f5;
-  border-bottom: 2px solid #ddd;
+  background-color: #1f1c24;
+  border-bottom: 2px solid #FFD700;
 }
 
 .debts-table tbody tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: rgba(0, 0, 0, 0.25);
 }
 
 .debts-table tbody tr:hover {
-  background-color: #f1f7ff;
+  background-color: rgba(255, 215, 0, 0.08);
   transition: 0.3s;
 }
 
-/* Status Badges */
 .status {
   padding: 6px 12px;
   border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 0.85rem;
+  font-weight: 700;
   display: inline-block;
 }
 
 .status.paid {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: rgba(40, 167, 69, 0.2);
+  color: green;
+  border: 1px solid rgba(40, 167, 69, 0.4);
 }
 
 .status.remaining {
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: rgba(255, 193, 7, 0.15);
+  color: gray;
+  border: 1px solid rgba(255, 215, 0, 0.35);
 }
 
 /* Payments Breakdown */
 .payment-breakdown {
-  margin-top: 12px;
+  margin-top: 10px;
   padding: 12px;
-  background-color: #f9f9f9;
-  border-left: 4px solid #4caf50;
-  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.35);
+  border-left: 4px solid #FFD700;
+  border-radius: 10px;
 }
 
 .payment-breakdown ul {
-  padding-left: 20px;
+  padding-left: 18px;
   margin-top: 8px;
 }
 
 .no-debts {
-  color: #777;
+  color: #b0b0b0;
   font-style: italic;
 }
-.recurring-expenses {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
-}
 
+/* Recurring expenses */
 .recurring-expenses table {
   width: 100%;
   border-collapse: collapse;
-  overflow-x: auto;
 }
 
-.recurring-expenses th, .recurring-expenses td {
-  padding: 12px 16px;
+.recurring-expenses th,
+.recurring-expenses td {
+  padding: 12px 14px;
   text-align: left;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15);
 }
 
 .recurring-expenses tbody tr:hover {
-  background-color: #f1f7ff;
+  background-color: rgba(255, 215, 0, 0.08);
   transition: 0.3s;
 }
 
 .status-badge {
   padding: 6px 12px;
   border-radius: 20px;
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
-.status-auto { background-color: #d4edda; color: #155724; }
-.status-pending { background-color: #fff3cd; color: #856404; }
-.status-overdue { background-color: #f8d7da; color: #721c24; }
+.status-auto { background-color: rgba(40, 167, 69, 0.2); color: blue; border: 1px solid rgb(17, 0, 255); }
+.status-pending { background-color: rgba(255, 193, 7, 0.15); color: green; border: 1px solid rgb(81, 255, 0); }
+.status-overdue { background-color: rgba(220, 53, 69, 0.2); color: red; border: 1px solid rgb(255, 0, 25); }
 
-/* Responsive: stack cards on mobile */
-@media (max-width: 768px) {
-  .chart-card {
-    flex: 1 1 100%;
-  }
-}
-
-.dark-mode .dashboard-welcome h2 {
-  color: #bbb;
-}
-
-.dark-mode-toggle {
-  display: block;
-  margin: 0 auto 30px auto;
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.dark-mode-toggle:hover {
-  background-color: #1976d2;
-}
-
-.action-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 40px;
-}
-
-.action-button {
-  background-color: #2196f3;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-
-.action-button:hover {
-  background-color: #1976d2;
-  transform: scale(1.03);
-}
-
-.expense-summary,
-.overall-summary,
-.budget-progress,
-.net-summary,
-.savings-goals,
-.debts,
-.recurring-expenses {
-  background-color: white;
-  padding: 30px 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  margin-bottom: 40px;
-}
-
-.dark-mode .expense-summary,
-.dark-mode .overall-summary,
-.dark-mode .budget-progress,
-.dark-mode .net-summary,
-.dark-mode .savings-goals,
-.dark-mode .debts,
-.dark-mode .recurring-expenses {
-  background-color: #2a2a2a;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.expense-summary h3,
-.overall-summary h3,
-.budget-progress h3,
-.net-summary h3,
-.savings-goals h3,
-.debts h3,
-.recurring-expenses h3 {
-  font-size: 1.6rem;
-  margin-bottom: 20px;
-}
-
-.expense-summary ul,
-.net-summary ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.expense-summary ul li,
-.net-summary ul li {
-  font-size: 1.1rem;
-  margin-bottom: 8px;
-}
-
-.alert {
-  color: #d32f2f;
-  font-weight: 600;
-  margin-top: 15px;
-}
-
+/* Budget Progress & Goals */
+.budget-progress { display: flex; flex-direction: column; gap: 14px; }
 .budget-card {
-  border: 1px solid #ddd;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  background-color: #fafafa;
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  padding: 18px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.35);
 }
 
-.dark-mode .budget-card {
-  background-color: #333;
-  border-color: #444;
-}
-
-.savings-goals {
-  margin-top: 20px;
-  padding: 20px;
-}
-
+/* Savings Goal Card */
 .goal-card {
-  background: #fff;
+  background: rgba(31, 28, 36, 0.85);
   padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-  font-size: 1.25rem;
-}
-
-.goal-card:hover {
-  transform: translateY(-4px);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255, 215, 0, 0.15);
+  color: #e0e0e0;
 }
 
 .progress-bar {
-  height: 16px;
-  background: #eee;
+  height: 14px;
+  background: #000000;
   border-radius: 8px;
   overflow: hidden;
-  margin: 10px 0;
+  margin: 8px 0;
   position: relative;
 }
 
@@ -843,218 +487,82 @@
   height: 100%;
   width: 0%;
   border-radius: 8px;
-  background: blue;
-  animation: fillAnimation 2s forwards;
+  background: green;
+  animation: fillAnimation 1.6s forwards;
 }
 
-.goal-card:hover .progress-bar-fill {
-  animation: none; /* Reset on hover */
-  width: 0%;
-  
-}
-.budget-progress {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
+.days-left.safe { color: blue; font-weight: 700; }
+.days-left.warning { color: green; font-weight: 700; }
+.days-left.urgent { color: red; font-weight: 800; }
 
+.motivation { font-style: italic; margin-top: 6px; color: #cfcfcf; }
+.over-saved { color: #7CFC98; font-weight: 800; margin-top: 6px; }
 
-
-.budget-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+/* PDF Report feature card (kept for compatibility) */
+.feature-card.pdf-report-card .action-button {
+  background: linear-gradient(135deg, #4caf50, #3cae5f);
+  color: #0d1117;
 }
 
+.feature-card.pdf-report-card .action-button:hover {
+  background: linear-gradient(135deg, #00e1ff, #3c00ff);
+  color: #ffffff;
+}
 
-@keyframes fillProgress {
+/* Dark mode toggle (visual alignment) */
+.dark-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #FFD700, #FFC107);
+  color: #0d1117;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.dark-mode-toggle:hover {
+  background: linear-gradient(135deg, #00e1ff, #3c00ff);
+  color: #ffffff;
+}
+
+/* Recent transactions (tables) */
+.recent-transactions { overflow-x: auto; }
+.recent-transactions table { width: 100%; margin-top: 16px; border-collapse: collapse; }
+.recent-transactions th { background-color: #1f1c24; color: #FFD700; padding: 10px; }
+.recent-transactions td, .recent-transactions th { padding: 10px; text-align: left; border-bottom: 1px solid rgba(255, 215, 0, 0.15); }
+.recent-transactions table tr:nth-child(even) { background-color: rgba(0, 0, 0, 0.25); }
+.recent-transactions table tr:hover { background-color: rgba(255, 215, 0, 0.08); }
+
+/* Animations */
+@keyframes fillAnimation {
   from { width: 0%; }
   to { width: var(--progress-width, 0%); }
 }
 
-/* Days Left Color Codes */
-.days-left.safe {
-  color: green;
-  font-weight: 600;
+/* Responsive */
+@media (max-width: 1024px) {
+  .feature-card { max-width: 45%; }
 }
-
-.days-left.warning {
-  color: orange;
-  font-weight: 600;
-}
-
-.days-left.urgent {
-  color: red;
-  font-weight: 700;
-}
-
-/* Motivation */
-.motivation {
-  font-style: italic;
-  margin-top: 6px;
-  color: #555;
-}
-
-/* Over-saved */
-.over-saved {
-  font-weight: bold;
-  color: #388e3c;
-}
-
-
-@keyframes fillAnimation {
-  from { width: 0%; }
-  to { width: var(--progress-width); }
-}
-
-.over-saved {
-  color: green;
-  font-weight: bold;
-  margin-top: 8px;
-}
-
-
-
-/* Keyframes */
-@keyframes fillAnimation {
-  from { width: 0; }
-  to { width: var(--progress-width, 0%); }
-}
-
-
-.debts-table-container {
-  overflow-x: auto;
-}
-
-.debts-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.debts-table th,
-.debts-table td {
-  padding: 12px 15px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-}
-
-.dark-mode .debts-table th,
-.dark-mode .debts-table td {
-  border-bottom-color: #555;
-}
-
-.debts-table th {
-  background-color: #f0f0f0;
-}
-
-.dark-mode .debts-table th {
-  background-color: #444;
-}
-
-.paid {
-  color: #4caf50;
-  font-weight: bold;
-}
-
-.remaining {
-  color: #ff9800;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table th,
-table td {
-  padding: 10px;
-  border: 1px solid #ccc;
-}
-
-.dark-mode table th,
-.dark-mode table td {
-  border-color: #555;
-}
-
-.recent-transactions {
-  overflow-x: auto;
-}
-
-.recent-transactions table {
-  width: 100%;
-  margin-top: 20px;
-}
-
-.recent-transactions th {
-  background-color: #2196f3;
-  color: white;
-}
-
-.dark-mode .recent-transactions th {
-  background-color: #1976d2;
-}
-
-.recent-transactions td,
-.recent-transactions th {
-  padding: 10px;
-  text-align: left;
-}
-
-.recent-transactions table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.dark-mode .recent-transactions table tr:nth-child(even) {
-  background-color: #2b2b2b;
-}
-
-.recent-transactions table tr:hover {
-  background-color: #f1f1f1;
-}
-
-.dark-mode .recent-transactions table tr:hover {
-  background-color: #3a3a3a;
-}
-
-/* Responsive Adjustments */
 
 @media (max-width: 768px) {
-  .action-buttons {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .action-button {
-    width: 100%;
-    max-width: 240px;
-  }
-  
-  .expense-summary,
-  .debts,
-  .recurring-expenses,
-  .savings-goals {
-    padding: 20px;
-  }
+  .action-buttons-container { flex-direction: column; align-items: center; }
+  .feature-card { max-width: 90%; }
+  .expense-cards-container { flex-direction: column; gap: 12px; }
+  .net-cards-container { flex-direction: column; gap: 12px; align-items: stretch; }
 }
 
 @media (max-width: 480px) {
-  .dashboard-welcome h1 {
-    font-size: 2rem;
-  }
-  
-  .dashboard-welcome h2 {
-    font-size: 1.1rem;
-  }
-  
-  .action-button {
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-  
-  .expense-summary h3,
-  .overall-summary h3,
-  .debts h3,
-  .recurring-expenses h3 {
-    font-size: 1.3rem;
-  }
+  .dashboard-welcome h1 { font-size: 2rem; }
+  .dashboard-welcome h2 { font-size: 1rem; }
+  .feature-card h3 { font-size: 1.05rem; }
+  .feature-card p { font-size: 0.85rem; }
+  .feature-card .action-button { font-size: 0.9rem; padding: 9px 14px; }
+  .chart-card { padding: 16px; min-width: 260px; }
 }
+
+/* Simple status colors used in markup */
+.paid { color: blue; font-weight: 700; }
+.remaining { color: green; font-weight: 700; }

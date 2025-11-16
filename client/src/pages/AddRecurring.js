@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import API from "../api";
 import "./AddRecurring.css";
+import useBodyScrollLock from "../utils/useBodyScrollLock";
 
 const AddRecurring = () => {
+  useBodyScrollLock(true);
   const [recurringList, setRecurringList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
@@ -21,46 +23,45 @@ const AddRecurring = () => {
   }, []);
 
   useEffect(() => {
-    // Process due recurring items with API calls instead of localStorage
-    const processDueRecurring = async () => {
-      const today = new Date().toISOString().split("T")[0];
-      
-      for (const r of recurringList) {
-        if (r.nextDue && r.nextDue <= today) {
-          if (window.confirm(`⚡ ${r.title} is due today. Add to ${r.type}?`)) {
-            try {
-              if (r.type === "expense") {
-                await API.post('/expenses/add', {
-                  title: r.title,
-                  amount: r.amount,
-                  category: "Recurring",
-                  date: today,
-                  notes: `Auto-added from recurring: ${r.title}`
-                });
-              } else {
-                await API.post('/incomes', {
-                  title: r.title,
-                  amount: r.amount,
-                  date: today,
-                  notes: `Auto-added from recurring: ${r.title}`
-                });
-              }
+    const today = new Date().toISOString().split("T")[0];
 
-              // Update next due date
-              const next = new Date(today);
-              next.setMonth(next.getMonth() + 1);
-              
-              await API.put(`/recurring/${r._id}`, {
-                ...r,
-                nextDue: next.toISOString().split("T")[0]
-              });
-            } catch (err) {
-              console.error("Error processing recurring item:", err);
-            }
-          }
-        }
+    const isDue = (r) => Boolean(r.nextDue) && r.nextDue <= today;
+
+    const addTransactionFromRecurring = async (r) => {
+      const payload = {
+        title: r.title,
+        amount: r.amount,
+        date: today,
+        notes: `Auto-added from recurring: ${r.title}`,
+      };
+      if (r.type === "expense") {
+        return API.post('/expenses/add', { ...payload, category: "Recurring" });
       }
-      // Refresh the list after processing
+      return API.post('/incomes', payload);
+    };
+
+    const updateNextDue = async (r) => {
+      const next = new Date(today);
+      next.setMonth(next.getMonth() + 1);
+      return API.put(`/recurring/${r._id}`, { ...r, nextDue: next.toISOString().split("T")[0] });
+    };
+
+    const processItem = async (r) => {
+      if (!window.confirm(`⚡ ${r.title} is due today. Add to ${r.type}?`)) return;
+      try {
+        await addTransactionFromRecurring(r);
+        await updateNextDue(r);
+      } catch (err) {
+        console.error("Error processing recurring item:", err);
+      }
+    };
+
+    const processDueRecurring = async () => {
+      const dueList = recurringList.filter(isDue);
+      for (const r of dueList) {
+        // eslint-disable-next-line no-await-in-loop
+        await processItem(r);
+      }
       fetchRecurring();
     };
 
@@ -89,6 +90,7 @@ const AddRecurring = () => {
       setRecurringList([...recurringList, res.data]);
       form.reset();
       alert("✅ Recurring transaction added!");
+      document.activeElement?.blur?.();
     } catch (err) {
       console.error("Error adding recurring:", err);
     }
@@ -133,35 +135,33 @@ const AddRecurring = () => {
   };
 
   return (
-    <>
       <div className="add-recurring-container">
-        <h2> 📅 Add Recurring Transaction</h2>
+       
         <form onSubmit={handleAdd} className="recurring-form">
-          <label htmlFor="title">Title</label>
-          <input id="title" name="title" placeholder="e.g., Rent, Salary" required />
+           <h2> 📅 Add Recurring Transaction</h2>
+          <label htmlFor="recTitle">Title</label>
+          <input id="recTitle" name="title" placeholder="e.g., Rent, Salary" required />
 
-          <label htmlFor="amount">Amount</label>
-          <input id="amount" name="amount" type="number" placeholder="Amount" required />
+          <label htmlFor="recAmount">Amount</label>
+          <input id="recAmount" name="amount" type="number" placeholder="Amount" required />
 
-          <label htmlFor="type">Type</label>
-          <select id="type" name="type" defaultValue="expense">
+          <label htmlFor="recType">Type</label>
+          <select id="recType" name="type" defaultValue="expense">
             <option value="expense">Expense</option>
             <option value="income">Income</option>
           </select>
 
-          <label htmlFor="nextDue">Next Due Date</label>
-          <input id="nextDue" name="nextDue" type="date" required />
+          <label htmlFor="recNextDue">Next Due Date</label>
+          <input id="recNextDue" name="nextDue" type="date" required />
 
           <button type="submit" className="save-btn">Save Recurring</button>
-         
         </form>
-      </div>
 
-      {/* ✅ This part is now outside the main container */}
-      {recurringList.length > 0 && (
-        <div className="existing-recurring-container">
-          <h3>Existing Recurring Transactions</h3>
-          <table className="recurring-table">
+        {/* Existing Recurring Transactions placed after form inside overlay */}
+        {recurringList.length > 0 && (
+          <div className="existing-recurring-container">
+            <h3>Existing Recurring Transactions</h3>
+            <table className="recurring-table">
             <thead>
               <tr>
                 <th>Title</th>
@@ -233,9 +233,9 @@ const AddRecurring = () => {
               )}
             </tbody>
           </table>
-        </div>
-      )}
-    </>
+          </div>
+        )}
+      </div>
   );
 };
 

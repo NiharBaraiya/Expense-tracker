@@ -1,0 +1,13 @@
+{
+  "name": "expense-tracker",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Root package to orchestrate client and server",
+  "scripts": {
+    "start": "npm --prefix client start",
+    "start:client": "npm --prefix client start",
+    "start:server": "npm --prefix server start",
+    "build": "npm --prefix client run build",
+    "test": "npm --prefix client test"
+  }
+}

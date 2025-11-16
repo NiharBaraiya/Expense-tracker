@@ -1,9 +1,11 @@
+/* eslint-env browser, es2020 */
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import API from "../api";
+import "./ViewTheme.css";
 
-const ViewExpenses = ({ budgetId }) => {
+const ViewExpenses = ({ budgetId, embedded = false }) => {
   const [expenses, setExpenses] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [editId, setEditId] = useState(null);
@@ -66,7 +68,7 @@ const ViewExpenses = ({ budgetId }) => {
   };
 
   const handleDeleteExpense = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this expense?")) return;
+    if (!globalThis?.confirm?.("Are you sure you want to delete this expense?")) return;
 
     try {
       await API.delete(`/expenses/delete/${id}`);
@@ -115,7 +117,7 @@ const ViewExpenses = ({ budgetId }) => {
   };
 
   const handleDeleteBudget = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this budget?")) return;
+    if (!globalThis?.confirm?.("Are you sure you want to delete this budget?")) return;
 
     try {
       await API.delete(`/budgets/delete/${id}`);
@@ -137,181 +139,212 @@ const ViewExpenses = ({ budgetId }) => {
     setShowBudgetExpenses(true);
   };
 
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>📋 All Expenses</h2>
+  const formatDate = (d) => (d ? String(d).substring(0, 10) : "-");
 
+  return (
+    <div className={embedded ? undefined : "view-container theme-bgr"}>
       {expenses.length === 0 ? (
-        <p>No expenses found.</p>
+        <p className="list-card" style={{ textAlign: "center" }}>
+          No expenses found.
+        </p>
       ) : (
-        <table
-          border="1"
-          cellPadding="8"
-          style={{ borderCollapse: "collapse", width: "100%" }}
-        >
-          <thead>
-            <tr style={{ background: "#f0f0f0" }}>
-              <th>Title</th>
-              <th>Amount</th>
-              <th>Currency</th>
-              <th>Category</th>
-              <th>Budget</th>
-              <th>Date</th>
-              <th>Notes</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {expenses.map((expense) =>
-              editId === expense.id ? (
-                <tr key={expense.id} style={{ background: "#fffae6" }}>
-                  <td>
-                    <input
-                      name="title"
-                      value={editForm.title}
-                      onChange={handleEditChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      type="number"
-                      name="amount"
-                      value={editForm.amount}
-                      onChange={handleEditChange}
-                    />
-                  </td>
-                  <td>
-                    <select
-                      name="currency"
-                      value={editForm.currency}
-                      onChange={handleEditChange}
-                    >
-                      <option value="USD">USD</option>
-                      <option value="INR">INR</option>
-                      <option value="EUR">EUR</option>
-                    </select>
-                  </td>
-                  <td>
-                    <input
-                      name="category"
-                      value={editForm.category}
-                      onChange={handleEditChange}
-                    />
-                  </td>
-                  <td>
-                    <select
-                      name="budgetId"
-                      value={editForm.budgetId}
-                      onChange={handleEditChange}
-                    >
-                      <option value="">No Budget Linked</option>
-                      {budgets.map((b) => (
-                        <option key={b.id} value={b.id}>
-                          {b.name} ({b.amount} {b.currency})
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td>
-                    <input
-                      type="date"
-                      name="date"
-                      value={editForm.date}
-                      onChange={handleEditChange}
-                    />
-                  </td>
-                  <td>
-                    <input
-                      name="notes"
-                      value={editForm.notes}
-                      onChange={handleEditChange}
-                    />
-                  </td>
-                  <td>
-                    <button
-                      onClick={handleSaveEdit}
-                      style={{ background: "green", color: "white" }}
-                    >
-                      💾 Save
-                    </button>
-                    <button
-                      onClick={handleCancelEdit}
-                      style={{ marginLeft: "5px" }}
-                    >
-                      ❌ Cancel
-                    </button>
-                  </td>
-                </tr>
-              ) : (
-                <tr key={expense.id}>
-                  <td>{expense.title}</td>
-                  <td>{expense.amount.toFixed(2)}</td>
-                  <td>{expense.currency}</td>
-                  <td>{expense.category}</td>
-                  <td>
-                    {getBudgetById(expense.budgetId)
-                      ? getBudgetById(expense.budgetId).name
-                      : "No Budget Linked"}
-                  </td>
-                  <td>{expense.date}</td>
-                  <td>{expense.notes || "-"}</td>
-                  <td>
-                    <button
-                      onClick={() => handleEditClick(expense)}
-                      style={{
-                        background: "orange",
-                        color: "white",
-                        padding: "4px 8px",
-                        border: "none",
-                        marginRight: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      ✏️ Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteExpense(expense.id)}
-                      style={{
-                        background: "red",
-                        color: "white",
-                        padding: "4px 8px",
-                        border: "none",
-                        marginRight: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      ❌ Delete
-                    </button>
-                    <button
-                      onClick={() => handleViewBudget(expense.budgetId)}
-                      style={{
-                        background: "blue",
-                        color: "white",
-                        padding: "4px 8px",
-                        border: "none",
-                        cursor: "pointer",
-                      }}
-                    >
-                      📊 View Budget
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
+        <div className="list-card" style={{ overflowX: "auto" }}>
+          {!embedded && <h2 className="view-heading">📋 All Expenses</h2>}
+          <br />
+          <br />
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Amount</th>
+                <th>Currency</th>
+                <th>Category</th>
+                <th>Budget</th>
+                <th>Date</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {expenses.map((expense) =>
+                editId === expense.id ? (
+                  <tr key={expense.id} className="is-editing">
+                    <td>
+                      <input
+                        name="title"
+                        value={editForm.title}
+                        onChange={handleEditChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        name="amount"
+                        value={editForm.amount}
+                        onChange={handleEditChange}
+                      />
+                    </td>
+                    <td>
+                      <select
+                        name="currency"
+                        value={editForm.currency}
+                        onChange={handleEditChange}
+                      >
+                          <option value="USD">USD ($)</option>
+          <option value="INR">INR (₹)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+          <option value="JPY">JPY (¥)</option>
+          <option value="AUD">AUD (A$)</option>
+          <option value="CAD">CAD (C$)</option>
+          <option value="CNY">CNY (¥)</option>
+          <option value="SGD">SGD (S$)</option>
+          <option value="AED">AED (د.إ)</option>
+          <option value="CHF">CHF (CHF)</option>
+          <option value="ZAR">ZAR (R)</option>
+          <option value="NZD">NZD (NZ$)</option>
+          <option value="HKD">HKD (HK$)</option>
+          <option value="SEK">SEK (kr)</option>
+          <option value="NOK">NOK (kr)</option>
+          <option value="DKK">DKK (kr)</option>
+          <option value="KRW">KRW (₩)</option>
+          <option value="THB">THB (฿)</option>
+          <option value="MYR">MYR (RM)</option>
+          <option value="PHP">PHP (₱)</option>
+          <option value="IDR">IDR (Rp)</option>
+          <option value="VND">VND (₫)</option>
+          <option value="PKR">PKR (₨)</option>
+          <option value="BDT">BDT (৳)</option>
+          <option value="SAR">SAR (﷼)</option>
+          <option value="KWD">KWD (د.ك)</option>
+          <option value="BHD">BHD (ب.د)</option>
+          <option value="QAR">QAR (ر.ق)</option>
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        name="category"
+                        value={editForm.category}
+                        onChange={handleEditChange}
+                      />
+                    </td>
+                    <td>
+                      <select
+                        name="budgetId"
+                        value={editForm.budgetId}
+                        onChange={handleEditChange}
+                      >
+                        <option value="">No Budget Linked</option>
+                        {budgets.map((b) => (
+                          <option key={b.id} value={b.id}>
+                            {b.name} ({b.amount} {b.currency})
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <input
+                        type="date"
+                        name="date"
+                        value={editForm.date}
+                        onChange={handleEditChange}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        name="notes"
+                        value={editForm.notes}
+                        onChange={handleEditChange}
+                      />
+                    </td>
+                    <td>
+                      <button className="btn btn-green" onClick={handleSaveEdit}>
+                        💾 Save
+                      </button>
+                      <button className="btn btn-ghost" onClick={handleCancelEdit}>
+                        ❌ Cancel
+                      </button>
+                    </td>
+                  </tr>
+                ) : (
+                  <tr key={expense.id}>
+                    <td>{expense.title}</td>
+                    <td>{expense.amount.toFixed(2)}</td>
+                    <td>{expense.currency}</td>
+                    <td>{expense.category}</td>
+                    <td>
+                      {getBudgetById(expense.budgetId)
+                        ? getBudgetById(expense.budgetId).name
+                        : "No Budget Linked"}
+                    </td>
+                    <td>{formatDate(expense.date)}</td>
+                    <td>{expense.notes || "-"}</td>
+                    <td className="actions-cell">
+                      <button
+                        className="btn btn-orange"
+                        onClick={() => handleEditClick(expense)}
+                      >
+                        ✏️ Edit
+                      </button>
+                      <button
+                        className="btn btn-red"
+                        onClick={() => handleDeleteExpense(expense.id)}
+                      >
+                        ❌ Delete
+                      </button>
+                      {expense.budgetId && (
+                        <button
+                          className="btn btn-blue"
+                          onClick={() => handleViewBudget(expense.budgetId)}
+                        >
+                          📊 View Budget
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+          {!embedded && (
+            <>
+              <br />
+              <div style={{ marginTop: 10 }}>
+                <button
+                  className="btn btn-blue"
+                  onClick={() => navigate("/add-expense")}
+                >
+                  + Add New Expense  
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+
+      {!embedded && (viewBudgetId || showBudgetExpenses) && (
+        <div style={{ width: 'min(1100px,95vw)' }}>
+          <button
+            className="btn btn-ghost"
+            style={{ marginBottom: 10 }}
+            onClick={() => {
+              setViewBudgetId(null);
+              setShowBudgetExpenses(false);
+            }}
+          >
+            ← Back to Expenses
+          </button>
+          <br />
+          <br />
+        </div>
       )}
 
       {viewBudgetId && getBudgetById(viewBudgetId) && (
-        <>
-          <h3 style={{ marginTop: "20px" }}>📌 Budget Details</h3>
-          <table
-            border="1"
-            cellPadding="8"
-            style={{ borderCollapse: "collapse", width: "100%" }}
-          >
+        <div className="list-card" style={{ width: "min(1100px,95vw)" }}>
+          <h3 style={{ marginTop: 0 }}>📌 Budget Details</h3>
+          <table className="data-table">
             <thead>
-              <tr style={{ background: "#f4f4f4" }}>
+              <tr>
                 <th>Name</th>
                 <th>Category</th>
                 <th>Amount</th>
@@ -343,45 +376,24 @@ const ViewExpenses = ({ budgetId }) => {
                 </td>
                 <td>{getBudgetById(viewBudgetId).currency}</td>
                 <td>
-                  {getBudgetById(viewBudgetId).startDate} →{" "}
-                  {getBudgetById(viewBudgetId).endDate}
+                  {formatDate(getBudgetById(viewBudgetId).startDate)} →{" "}
+                  {formatDate(getBudgetById(viewBudgetId).endDate)}
                 </td>
                 <td>
                   <button
-                    style={{
-                      background: "orange",
-                      color: "white",
-                      padding: "4px 8px",
-                      border: "none",
-                      marginRight: "5px",
-                      cursor: "pointer",
-                    }}
+                    className="btn btn-orange"
                     onClick={() => navigate(`/edit-budget/${viewBudgetId}`)}
                   >
                     ✏️ Edit
                   </button>
                   <button
-                    style={{
-                      background: "red",
-                      color: "white",
-                      padding: "4px 8px",
-                      border: "none",
-                      marginRight: "5px",
-                      cursor: "pointer",
-                    }}
+                    className="btn btn-red"
                     onClick={() => handleDeleteBudget(viewBudgetId)}
                   >
                     ❌ Delete
                   </button>
                   <button
-                    style={{
-                      background: "blue",
-                      color: "white",
-                      padding: "6px 9px",
-                      border: "none",
-                      cursor: "pointer",
-                      marginTop: "5px",
-                    }}
+                    className="btn btn-blue"
                     onClick={handleViewBudgetExpenses}
                   >
                     📄 View Expenses
@@ -390,23 +402,19 @@ const ViewExpenses = ({ budgetId }) => {
               </tr>
             </tbody>
           </table>
-        </>
+        </div>
       )}
 
       {showBudgetExpenses && viewBudgetId && (
-        <>
-          <h3 style={{ marginTop: "20px" }}>💰 Expenses for Selected Budget</h3>
+        <div className="list-card" style={{ width: "min(1100px,95vw)" }}>
+          <h3 style={{ marginTop: 0 }}>💰 Expenses for Selected Budget</h3>
           {expenses.filter((e) => String(e.budgetId) === String(viewBudgetId))
             .length === 0 ? (
             <p>No expenses found for this budget.</p>
           ) : (
-            <table
-              border="1"
-              cellPadding="8"
-              style={{ borderCollapse: "collapse", width: "100%" }}
-            >
+            <table className="data-table">
               <thead>
-                <tr style={{ background: "#f0f0f0" }}>
+                <tr>
                   <th>Title</th>
                   <th>Amount</th>
                   <th>Currency</th>
@@ -425,44 +433,24 @@ const ViewExpenses = ({ budgetId }) => {
                       <td>{expense.amount.toFixed(2)}</td>
                       <td>{expense.currency}</td>
                       <td>{expense.category}</td>
-                      <td>{expense.date}</td>
+                      <td>{formatDate(expense.date)}</td>
                       <td>{expense.notes || "-"}</td>
-                      <td>
+                      <td className="actions-cell">
                         <button
-                          onClick={() => handleEditClick(expense)}
-                          style={{
-                            background: "orange",
-                            color: "white",
-                            padding: "4px 8px",
-                            border: "none",
-                            marginRight: "5px",
-                            cursor: "pointer",
-                          }}
+                          className="btn btn-orange"
+                          onClick={() => navigate(`/edit-expense/${expense.id}`)}
                         >
                           ✏️ Edit
                         </button>
                         <button
-                          onClick={() => handleDeleteExpense(expense.id)}
-                          style={{
-                            background: "red",
-                            color: "white",
-                            padding: "4px 8px",
-                            border: "none",
-                            marginRight: "5px",
-                            cursor: "pointer",
-                          }}
+                          className="btn btn-red"
+                          onClick={() => navigate(`/delete-expense/${expense.id}`)}
                         >
                           ❌ Delete
                         </button>
                         <button
+                          className="btn btn-blue"
                           onClick={() => handleViewBudget(expense.budgetId)}
-                          style={{
-                            background: "blue",
-                            color: "white",
-                            padding: "4px 8px",
-                            border: "none",
-                            cursor: "pointer",
-                          }}
                         >
                           📊 View Budget
                         </button>
@@ -472,29 +460,15 @@ const ViewExpenses = ({ budgetId }) => {
               </tbody>
             </table>
           )}
-        </>
+        </div>
       )}
-
-      <br />
-      <button
-        onClick={() => navigate("/add-expense")}
-        style={{
-          background: "blue",
-          color: "white",
-          padding: "8px 12px",
-          border: "none",
-          cursor: "pointer",
-          marginTop: "15px",
-        }}
-      >
-        ➕ Add New Expense
-      </button>
     </div>
   );
 };
 
 ViewExpenses.propTypes = {
   budgetId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  embedded: PropTypes.bool,
 };
 
 export default ViewExpenses;

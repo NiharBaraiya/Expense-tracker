@@ -7,14 +7,16 @@ const Income = require("../models/Income");
 const Debt = require("../models/Debt");
 const Recurring = require("../models/Recurring");
 
-// Create reusable transporter
+// Create reusable transporter (uses env and app password)
 const createTransporter = () => {
-  return nodemailer.createTransporter({
+  const user = process.env.EMAIL_USER;
+  const pass = (process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD || "").replace(/\s+/g, "");
+  if (!user || !pass) {
+    console.warn("[emailNotifications] Missing EMAIL_USER or EMAIL_PASS in environment.");
+  }
+  return nodemailer.createTransport({
     service: "gmail",
-    auth: {
-      user: "baraiyanihar106@gmail.com",
-      pass: "osrlpdvveiwnmjhe",
-    },
+    auth: { user, pass },
   });
 };
 
@@ -23,7 +25,7 @@ const sendEmail = async (to, subject, html, text) => {
   try {
     const transporter = createTransporter();
     await transporter.sendMail({
-      from: "baraiyanihar106@gmail.com",
+      from: process.env.EMAIL_USER,
       to,
       subject,
       html,
@@ -208,7 +210,7 @@ const sendNegativeSavingsAlert = async ({ userEmail, savingsAmount, totalExpense
   await sendEmail(userEmail, subject, html, text);
 };
 
-// 6. High Interest Debt Warning
+
 const sendHighInterestDebtWarning = async ({ userEmail, debtTitle, amount, interestRate }) => {
   const subject = `🔴 High Interest Debt Warning: ${debtTitle}`;
   

@@ -4,17 +4,17 @@
   margin: 20px auto;
   padding: 20px;
   max-width: 900px;
-  background: #f9f9f9;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--muted-bg);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
 }
 
 /* ===== Page Title ===== */
 .pdf-title {
   font-size: 26px;
-  font-weight: bold;
+  font-weight: 800;
   margin-bottom: 15px;
-  color: #2c3e50;
+  color: var(--gray-900);
 }
 
 /* ===== Button Styling ===== */
@@ -22,35 +22,46 @@
   margin-top: 20px;
   padding: 12px 20px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   border: none;
-  border-radius: 8px;
-  background: #2c3e50;
-  color: white;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: var(--white);
   cursor: pointer;
-  transition: 0.3s;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--shadow-sm);
 }
 
-.pdf-button:hover {
-  background: #1a252f;
-}
+.pdf-button:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 .pdf-export-button {
   background-color: #2196f3;
-  color: white;
+  color: var(--white);
   border: none;
   padding: 8px 16px;       /* Bigger padding for larger button */
-  border-radius: 8px;
-  font-weight: 500;
+  border-radius: var(--radius-md);
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s ease, transform 0.2s ease;
-  font-size: 0.9rem;        /* Larger text */
+  transition: background var(--transition-normal), transform var(--transition-fast);
+  font-size: 0.95rem;        /* Larger text */
   display: inline-block;
 }
 
-.pdf-export-button:hover {
-  background-color: #1976d2;
-  transform: scale(1.03);
+.pdf-export-button:hover { background-color: #1976d2; transform: scale(1.03); }
+
+/* Match email button styling with export button, but with success color */
+.email-report-button {
+  background-color: #2ecc71;
+  color: var(--white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition-normal), transform var(--transition-fast);
+  font-size: 0.95rem;
+  display: inline-block;
 }
+.email-report-button:hover { background-color: #27ae60; transform: scale(1.03); }
 
 
 /* ===== Table Styling (for preview in browser) ===== */
@@ -59,31 +70,33 @@
   border-collapse: collapse;
   width: 85%;
   font-size: 14px;
-  background: white;
+  background: var(--white);
 }
 
 .pdf-table th,
 .pdf-table td {
-  border: 1px solid #ccc;
+  border: 1px solid var(--gray-200);
   padding: 8px;
   text-align: center;
 }
 
-.pdf-table th {
-  background: #3498db;
-  color: white;
-}
+.pdf-table th { background: #3498db; color: var(--white); }
 
-.pdf-table tr:nth-child(even) {
-  background: #f2f2f2;
-}
+.pdf-table tr:nth-child(even) { background: var(--gray-100); }
 
 /* ===== Chart Containers ===== */
 .chart-container {
   margin: 25px auto;
   padding: 10px;
   max-width: 600px;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+}
+
+/* PDF specific chart tweaks for crisper exports */
+.pdf-chart {
+  background: #ffffff; /* ensure white background for html2canvas */
+  border: 1px solid #ecf0f1;
+  box-shadow: none;
 }

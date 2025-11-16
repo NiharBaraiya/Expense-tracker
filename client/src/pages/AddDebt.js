@@ -1,9 +1,11 @@
 // pages/AddDebt.js
 import React, { useState, useEffect } from "react";
 import API from "../api";
+import useBodyScrollLock from "../utils/useBodyScrollLock";
 import './AddDebt.css';
 
 const AddDebt = () => {
+  useBodyScrollLock(true);
   const [debtList, setDebtList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
@@ -45,6 +47,8 @@ const AddDebt = () => {
       fetchDebts();
       form.reset();
       alert("✅ Debt added successfully!");
+      // Remove focus so the existing list becomes visible again
+      document.activeElement?.blur?.();
     } catch (err) {
       console.error("Error adding debt:", err);
       alert("❌ Failed to add debt.");
@@ -113,36 +117,39 @@ const AddDebt = () => {
   };
 
   return (
-    <>
       <div className="add-debt-container">
-        <h2>💳 Add Debt / Loan</h2>
+     
         <form onSubmit={handleAdd} className="debt-form">
+             <h2>💳 Add Debt / Loan</h2>
+             <br></br>
+            
           <label htmlFor="title">Title</label>
-          <input name="title" placeholder="Debt Title" required />
+          <input id="title" name="title" placeholder="Debt Title" required />
 
           <label htmlFor="amount">Amount</label>
-          <input name="amount" type="number" placeholder="Amount" required />
+          <input id="amount" name="amount" type="number" placeholder="Amount" required />
 
           <label htmlFor="interest">Interest (%)</label>
-          <input name="interest" type="number" placeholder="Interest (%)" />
+          <input id="interest" name="interest" type="number" placeholder="Interest (%)" />
 
           <label htmlFor="dueDate">Due Date</label>
-          <input name="dueDate" type="date" required />
+          <input id="dueDate" name="dueDate" type="date" required />
 
           <label htmlFor="paid" style={{ display: "flex", alignItems: "left", gap: "0.5rem" }}>
             Paid: <input name="paid" type="checkbox" />
           </label>
 <br></br>
-          <button type="submit">💾 Save Debt</button>
+
+
+        <button type="submit">💾 Save Debt</button>
           
         </form>
-      </div>
 
-      {/* Existing Debts Table outside the form container */}
-      {debtList.length > 0 && (
-        <div className="existing-debts-container">
-          <h3>📋 Existing Debts</h3>
-          <table className="debt-table">
+        {/* Existing Debts Table placed after form inside overlay */}
+        {debtList.length > 0 && (
+          <div className="existing-debts-container">
+            <h3>📋 Existing Debts</h3>
+            <table className="debt-table">
             <thead>
               <tr>
                 <th>Due Date</th>
@@ -224,8 +231,8 @@ const AddDebt = () => {
                     <td>
                       {d.payments && d.payments.length > 0 ? (
                         <ul style={{ paddingLeft: "20px", textAlign: "left" }}>
-                          {d.payments.map((p, i) => (
-                            <li key={i}>
+                          {d.payments.map((p) => (
+                            <li key={`${p.date}-${p.amount}`}>
                               ₹ {p.amount} on {p.date}
                             </li>
                           ))}
@@ -275,9 +282,9 @@ const AddDebt = () => {
               )}
             </tbody>
           </table>
-        </div>
-      )}
-    </>
+          </div>
+        )}
+      </div>
   );
 };
 

@@ -289,32 +289,22 @@ const [pdfBase64, setPdfBase64] = useState(null);
 
   <div className="feature-card">
     <h3>Add Expense</h3>
-    <p>Log your daily expenses to monitor spending.</p>
+    <p>Log your daily expenses to monitor spending.(Manage Expense)</p>
     <button onClick={() => navigate('/add-expense')} className="action-button">➕ Add Expense</button>
   </div>
 
-  <div className="feature-card">
-    <h3>View Budgets</h3>
-    <p>See all your budgets and their progress.</p>
-    <button onClick={() => navigate('/budgets')} className="action-button">📊 View Budgets</button>
-  </div>
-
-  <div className="feature-card">
-    <h3>View Expenses</h3>
-    <p>Check all your recorded expenses.</p>
-    <button onClick={() => navigate('/expenses')} className="action-button">📋 View Expenses</button>
-  </div>
+ 
 
   <div className="feature-card">
     <h3>Add Income</h3>
-    <p>Add your income to update your financial overview.</p>
+    <p>Add your income to update your financial overview.(Manage Income)</p>
     <button onClick={() => navigate('/add-income')} className="action-button">💵 Add Income</button>
   </div>
 
   <div className="feature-card">
     <h3>Add Debt / Loan</h3>
-    <p>Track your debts and loans with repayment details.</p>
-    <button onClick={() => navigate('/add-debt')} className="action-button">💳 Add Debt / Loan</button>
+    <p>Track your debts and loans with repayment details.(Manage Debt/Loan)</p>
+    <button onClick={() => navigate('/add-debt')} className="action-button">💳 Add  Loan</button>
   </div>
 
   <div className="feature-card">
@@ -322,19 +312,37 @@ const [pdfBase64, setPdfBase64] = useState(null);
     <p>Set up recurring payments for subscriptions or bills.</p>
     <button onClick={() => navigate('/add-recurring')} className="action-button">🔁 Add Recurring</button>
   </div>
+ <div className="feature-card">
+    <h3>View Budgets</h3>
+    <p>See all your budgets and their progress and update or delete and according you can see expenses also.</p>
+    <br></br>
+    <button onClick={() => navigate('/budgets')} className="action-button">📊 View Budgets</button>
+  </div>
 
   <div className="feature-card">
+    <h3>View Expenses</h3>
+    <p>Check all your recorded expenses and update or delete them and according you can see budget also.</p>
+  <br></br><br></br>
+    <button onClick={() => navigate('/expenses')} className="action-button">📋 View Expenses</button>
+  </div>
+  <div className="feature-card">
     <h3>Set Savings Goal</h3>
-    <p>Define a savings goal and track your progress.</p>
+    <p>Define a savings goal and track your progress and update or delete it as needed.</p>
+    <br></br><br></br>
     <button onClick={() => navigate('/add-savings-goal')} className="action-button">🎯 Set Savings Goal</button>
   </div>
 
 <div className="feature-card pdf-report-card">
   <h3>Export & Email PDF Report</h3>
   <p>Download or send a PDF report of your finances.</p>
+  <br></br>
   <PDFReportButton
     expenses={expenses}
     budgets={budgets}
+    income={income}
+    debts={debts}
+    recurring={recurring}
+    savingsGoals={savingsGoal ? [savingsGoal] : []}
   />
 </div>
 
@@ -396,7 +404,7 @@ const [pdfBase64, setPdfBase64] = useState(null);
     <br></br>
     {/* Net Savings */}
     <div className="expense-card">
-      <h4>Net Savings(This Month)</h4>
+      <h4> This Month Savings</h4>
       <p>{userSettings.currency}{netSavings}</p>
     </div>
   {monthAlert && <p className="alert">{monthAlert}</p>}

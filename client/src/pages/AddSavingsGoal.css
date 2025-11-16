@@ -1,237 +1,74 @@
-/* --- SAVING PAGE CONTAINER --- */
-.add-saving-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 30px 35px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #000;
-  transition: box-shadow 0.3s ease;
-  gap: 2.1rem;
-}
+/* ===============================
+  Savings Goal — Light Form on Dimmed Overlay (Dark + Gold brand)
+  Form + Existing list visible; background is disabled/dimmed.
+=============================== */
 
-.add-saving-container:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
+:root { --accent:#FFD700; --accent-2:#FFC107; --accent-dark:#b48a00; --bg-overlay:rgba(0,0,0,.6); --card-bg:#fff; --text:#1a1a1a; --input-border:#e5e7eb; --input-border-hover:#d1d5db; --focus-ring:rgba(255,215,0,.25); }
 
-/* --- HEADINGS --- */
-.add-saving-container h2 {
-  color: #2563eb;
-  font-weight: 700;
-  margin-bottom: 1.725rem;
-  text-align: center;
-  font-size: 2.25rem;
-}
-
-.add-saving-container h3 {
-  color: #1e88e5;
-  font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 1.125rem;
-  font-size: 1.8rem;
-  letter-spacing: 0.01em;
-}
-
-/* --- SAVING FORM --- */
-.saving-form {
-  display: flex;
-  flex-direction: column;
-  gap: 2.1rem;
-  margin-bottom: 7rem;
-}
-
-.saving-form label {
-  font-weight: 600;
-  margin-bottom: 1.925rem;
-  color: #000;
-  font-size: 1.4rem;
-  user-select: none;
-  /* gap: 2.1rem; */
-}
-
-.saving-form input,
-.saving-form select,
-.saving-form textarea {
-  width: 97%;
-  padding: 0.875rem 1rem;
-  border-radius: 12px;
-  border: 1.8px solid #ddd;
-  font-size: 1.3rem;
-  font-family: inherit;
- 
-  color: #000;
-  resize: vertical;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-}
-
-.saving-form input::placeholder,
-.saving-form textarea::placeholder {
-  color: #aaa;
-  font-style: italic;
-}
-
-.saving-form input:focus,
-.saving-form select:focus,
-.saving-form textarea:focus {
-  border-color: #1e88e5;
-  outline: 2px solid #90caf9;
-  box-shadow: 0 0 12px rgba(30, 136, 229, 0.6);
-  background-color: #f0f7ff;
-
-}
-
-/* --- BUTTONS --- */
-.saving-form button {
-  background: linear-gradient(90deg, #1e88e5, #1565c0);
-  color: #fff;
-  font-weight: 700;
-  padding: 1rem 0;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 1.25rem;
-  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.2s ease;
-  user-select: none;
-  box-shadow: 0 6px 16px rgba(30, 96, 229, 0.45);
-  letter-spacing: 0.06em;
-  margin-top: 10px;
-}
-
-.saving-form button:hover {
-  background: linear-gradient(90deg, #1565c0, #0d3d7a);
-  box-shadow: 0 8px 20px rgba(13, 61, 122, 0.75);
-  transform: translateY(-2px);
-}
-
-.saving-form button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(13, 61, 122, 0.6);
-}
-
-/* --- SAVINGS LIST / GOAL TABLE (Optional) --- */
-.saving-list-container {
-  margin: 2rem auto 3rem;
-  max-width: 1200px;
-  padding: 1.25rem 1rem;
-  background: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow-x: auto;
-}
-
-.saving-list-container h3 {
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: #000;
+.add-saving-container { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 18px; padding: clamp(48px, 10vh, 96px) 24px 24px; background: var(--bg-overlay); backdrop-filter: blur(6px); z-index: 1000; font-family: 'Poppins','Inter',system-ui,-apple-system, Segoe UI, Roboto, Arial, sans-serif; animation: fadeInOverlay 180ms ease-out; height: 100vh; overflow: auto; }
+.add-saving-container h2 {   
   font-size: 2.2rem;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+ color:#FFC107; }
+.add-saving-container h2::after { content: ""; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 140px; height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: 0 1px 6px rgba(255,215,0,.4); }
+
+.saving-form { order: 1; width: min(820px, 100%); background: var(--card-bg); color: var(--text); border-radius: 16px; border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent); box-shadow: 0 24px 60px rgba(0,0,0,.35); padding: 26px 22px; display: grid; grid-template-columns: repeat(12, 1fr); row-gap: 14px; max-height: calc(100vh - 160px); overflow: auto; position: relative; transition: box-shadow 0.25s ease, transform 0.2s ease; }
+.saving-form .form-group { grid-column: 1 / -1; }
+.saving-form::before { content:''; position:absolute; top:0; left:0; right:0; height:6px; border-top-left-radius:16px; border-top-right-radius:16px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: 0 2px 10px rgba(255, 215, 0, 0.35); }
+.saving-form label { font-weight: 600; color: #222; font-size: 1.2rem; grid-column: 1 / span 12; }
+.saving-form input, .saving-form select, .saving-form textarea {  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 1.3rem;
+  color: #111827;
+  background: #ffffff;
+  grid-column: 1 / span 12;
+  box-sizing: border-box;
+  border-color: black; }
+.saving-form input:hover, .saving-form select:hover, .saving-form textarea:hover { border-color: #000000; }
+.saving-form input:focus, .saving-form select:focus, .saving-form textarea:focus { border-color: #000000; outline:none; box-shadow: 0 0 0 4px var(--focus-ring); background-color:#fffef5; }
+/* Wide screens: stack vertically (Amount, then Deadline, then Save) */
+@media (min-width: 900px) {
+  /* Keep groups intact so label and input stay stacked inside each group */
+  .saving-form .form-group { display: block; }
+  /* Ensure any <br> used in markup still creates space */
+  .saving-form br { display: block; }
+  /* Save button on its own line, left aligned */
+  .saving-form .save-btn { grid-column: 1 / -1; justify-self: start; min-height: 48px; }
+}
+.saving-form button {  min-width:200px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0d1117; font-weight:800; padding:14px 18px; border:none; border-radius:12px; cursor:pointer; font-size:1.35rem; transition: transform .2s, box-shadow .25s, filter .25s; box-shadow:0 10px 26px rgba(255,215,0,.35); margin-top: 8px; grid-column: 1 / -1; justify-self: start; }
+.saving-form button:hover { filter: brightness(.95) saturate(1.05); transform: translateY(-2px) scale(1.02); box-shadow:0 14px 30px rgba(0,0,0,.25); }
+.saving-form button:active { transform: translateY(0); }
+
+.saving-list-container { order: 2; position: relative; width: min(1100px, 95vw); max-height: 40vh; overflow: auto; padding: 1.25rem 1rem; background: #ffffff; border: 1px solid color-mix(in oklab, var(--accent) 25%, transparent); border-radius: 12px; box-shadow: 0 12px 28px rgba(0,0,0,.25); z-index: 1001; transition: opacity .18s ease, transform .18s ease, visibility 0s linear 0s; }
+.saving-list-container h3 { margin-bottom: 1rem; font-weight: 700; color: var(--accent-dark); font-size: 1.6rem; }
+.saving-table { width: 100%; border-collapse: collapse; min-width: 600px; font-size: 1rem; color: #000; }
+.saving-table thead th { position: sticky; top: 0; background: linear-gradient(90deg, var(--accent), var(--accent-2)); color: #0d1117; padding: .75rem .9rem; font-weight: 800; text-align: center; z-index: 1; }
+.saving-table tbody td { padding: .7rem .9rem; text-align: center; font-size: 1.05rem; color: #444; }
+.saving-table tbody tr:nth-child(even) { background-color: #f6f7f9; }
+.saving-table tbody tr:hover { background-color: #f0f4ff; transition: background-color .15s ease; }
+.saving-table td button { margin-right: 10px; padding: 6px 14px; font-size: 1rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; transition: transform .2s, filter .2s; }
+.saving-table td button:hover { transform: scale(1.05); filter: brightness(.95); }
+.edit-btn { background:#1976d2; color:#fff; } .edit-btn:hover { background:#115293; }
+.delete-btn { background:#e53935; color:#fff; } .delete-btn:hover { background:#ab2c28; }
+.save-btn { background:#43a047; color:#fff; } .save-btn:hover { background:#2e7d32; }
+.cancel-btn { background:#9e9e9e; color:#fff; } .cancel-btn:hover { background:#616161; }
+
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 600px) { .saving-list-container { max-height: 48vh; } }
+
+/* Interactions: hide existing list while interacting with the form */
+.saving-form:hover + .saving-list-container {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
 }
 
-.saving-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 600px;
-  font-size: 1rem;
-  color: #000;
-}
-
-.saving-table thead th {
-  background-color: #4caf50;
-  color: #fff;
-  padding: 0.625rem 0.75rem;
-  font-weight: 700;
-  text-align: center;
-}
-
-.saving-table tbody td {
-  padding: 0.625rem 0.75rem;
-  text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-}
-
-.saving-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* --- TABLE BUTTONS --- */
-.saving-table td button {
-  margin-right: 10px;
-  padding: 6px 14px;
-  font-size: 1.2rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-.saving-table td button:hover {
-  transform: scale(1.05);
-}
-
-.edit-btn {
-  background-color: #1976d2;
-  color: white;
-}
-.edit-btn:hover {
-  background-color: #115293;
-}
-
-.delete-btn {
-  background-color: #e53935;
-  color: white;
-}
-.delete-btn:hover {
-  background-color: #ab2c28;
-}
-
-.save-btn {
-  background-color: #43a047;
-  color: white;
-}
-.save-btn:hover {
-  background-color: #2e7d32;
-}
-
-.cancel-btn {
-  background-color: #9e9e9e;
-  color: white;
-}
-.cancel-btn:hover {
-  background-color: #616161;
-}
-
-/* --- RESPONSIVE DESIGN --- */
-@media (max-width: 480px) {
-  .add-saving-container {
-    padding: 25px 20px;
-  }
-
-  .saving-form {
-    gap: 1rem;
-  }
-
-  .saving-form button {
-    font-size: 1.1rem;
-    padding: 0.875rem 0;
-  }
-
-  .saving-table,
-  .saving-list-container {
-    min-width: unset;
-  }
-
-  .saving-table th,
-  .saving-table td {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.6rem;
-  }
-
-  .saving-table td button {
-    padding: 5px 8px;
-    font-size: 0.8rem;
-  }
-}
+/* Darken overlay backdrop during interaction */
+.add-saving-container:has(.saving-form:hover) { background: rgba(0,0,0,.85); }

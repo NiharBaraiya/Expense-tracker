@@ -1,10 +1,13 @@
+/* eslint-disable react/prop-types */
 // pages/AddExpense.js
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../api";
+import useBodyScrollLock from "../utils/useBodyScrollLock";
 import "./AddExpense.css"; // ✅ Make sure this file contains matching CSS
 
 const AddExpense = ({ userId }) => {
+  useBodyScrollLock(true);
   const [form, setForm] = useState({
     title: "",
     amount: "",
@@ -32,13 +35,8 @@ const AddExpense = ({ userId }) => {
     fetchBudgets();
 
     const fetchExpenses = async () => {
-      try {
-        const res = await API.get("/expenses");
-        setExpenses(res.data);
-      } catch (err) {
-        console.warn("Could not fetch expenses from backend");
-        setExpenses([]);
-      }
+      const res = await API.get("/expenses").catch(() => null);
+      if (res) setExpenses(res.data);
     };
     fetchExpenses();
   }, []);
@@ -100,9 +98,10 @@ const AddExpense = ({ userId }) => {
 
   return (
     <div className="add-expense-container">
-      <h2>💰 Add Expense</h2>
+    
       <form onSubmit={handleSubmit} className="expense-form">
         {/* Expense Title */}
+          <h2>💰 Add Expense</h2>
         <label htmlFor="title">Expense Title</label>
         <input
           id="title"

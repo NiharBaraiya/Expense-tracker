@@ -1,277 +1,281 @@
-/* --- Add Income Container Styles (Modern & Clean to Match AddBudget) --- */
+/* ===============================
+  Add Income — Light Form on Dimmed Overlay (Dark + Gold brand)
+  Form and Existing list visible; rest of page is dimmed/disabled.
+  Matches AddBudget overlay behavior.
+=============================== */
 
-/* Container */
+/* Theme tokens */
+:root {
+  --accent: #FFD700;
+  --accent-2: #FFC107;
+  --accent-dark: #b48a00;
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --card-bg: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #6b7280;
+  --input-border: #e5e7eb;
+  --input-border-hover: #d1d5db;
+  --focus-ring: rgba(255, 215, 0, 0.25);
+}
+
+/* Page Overlay (dims background) */
 .add-income-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 30px 35px;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #000;
-  text-align: left;
-  transition: box-shadow 0.3s ease;
-}
-
-.add-income-container:hover {
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
-}
-
-/* Headings */
-.add-income-container h2 {
-  color: #2563eb; /* Blue */
-  font-weight: 700;
-  margin-bottom: 1.125rem; /* 18px */
-  text-align: center;
-  font-size: 2.25rem;
-}
-
-.add-income-container h3 {
-  color: #1e88e5; /* Slightly softer blue for subhead */
-  font-weight: 700;
-  margin-top: 2.5rem;
-  margin-bottom: 1.125rem;
-  font-size: 1.8rem;
-  letter-spacing: 0.01em;
-}
-
-/* Income Form */
-.income-form {
+  position: fixed;
+  inset: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem; /* 20px */
-  margin-bottom: 3rem; /* 50px */
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  padding: clamp(24px, 4vh, 36px) 24px 24px;
+  padding-top: clamp(48px, 10vh, 96px);
+  background: var(--bg-overlay);
+  backdrop-filter: blur(6px); 
+   z-index: 1000;
+  font-family: 'Poppins', 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  animation: fadeInOverlay 180ms ease-out;
+  height: 100vh;
+  overflow: auto;
+}
+
+.add-income-container h2 {
+  font-size: 2.2rem;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+ color:#FFC107;
+}
+
+/* Centered Light Form Card */
+.income-form {
+  width: min(820px, 100%);
+  background: var(--card-bg);
+  color: var(--text);
+  border-radius: 16px;
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  padding: 26px 22px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  row-gap: 14px;
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+  position: relative;
+  order: 1;
+}
+
+/* Gold accent bar on top */
+.income-form::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
 .income-form label {
   font-weight: 600;
-  margin-bottom: 0.625rem; /* 10px */
-  color: #000;
+  color: #222;
   font-size: 1.4rem;
-  user-select: none;
+  grid-column: 1 / span 12;
 }
 
 .income-form input,
 .income-form textarea {
-  width: 97%;
-  padding: 0.875rem 1rem; /* 14px 16px */
+  width: 100%;
+  padding: 12px 14px;
   border-radius: 12px;
-  border: 1.8px solid #ddd;
-  font-size: 1.3rem;
-  font-family: inherit;
-  color: #000;
-  resize: vertical;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
-  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+  border: 1px solid var(--input-border);
+  font-size: 1.35rem;
+  color: #111827;
+  background: #ffffff;
+  grid-column: 1 / span 12;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .income-form input::placeholder,
-.income-form textarea::placeholder {
-  color: #aaa;
-  font-style: italic;
+.income-form textarea::placeholder { color: #9ca3af;
 }
+
+.income-form input:hover,
+.income-form textarea:hover { border-color: var(--input-border-hover); }
 
 .income-form input:focus,
 .income-form textarea:focus {
-  border-color: #1e88e5;
-  outline: 2px solid #90caf9; /* better focus for accessibility */
-  box-shadow: 0 0 12px rgba(30, 136, 229, 0.6);
-  background-color: #f0f7ff;
+  border-color: var(--accent-dark);
+  outline: none;
+  box-shadow: 0 0 0 4px var(--focus-ring);
+  background-color: #fffef5;
+
 }
 
-/* Buttons */
+/* Two-column on wide screens */
+@media (min-width: 900px) {
+  .income-form label { grid-column: 1 / span 4; align-self: center; }
+  .income-form label + input,
+  .income-form label + textarea { grid-column: 5 / span 8; }
+}
+
+/* Primary Button (brand-aligned) */
 .income-form button {
-  background: linear-gradient(90deg, #1e88e5, #1565c0);
-  color: #fff;
-  font-weight: 700;
-  padding: 1rem 0;
+  justify-self: center;
+  min-width: 200px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #0d1117;
+  font-weight: 800;
+  padding: 14px 18px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  font-size: 1.25rem;
-  transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.2s ease;
-  user-select: none;
-  box-shadow: 0 6px 16px rgba(30, 96, 229, 0.45);
-  letter-spacing: 0.02em;
+  font-size: 1.15rem;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  box-shadow: 0 10px 26px rgba(255, 215, 0, 0.35);
 }
 
 .income-form button:hover {
-  background: linear-gradient(90deg, #1565c0, #0d3d7a);
-  box-shadow: 0 8px 20px rgba(13, 61, 122, 0.75);
-  transform: translateY(-2px);
+  filter: brightness(0.95) saturate(1.05);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+    background: linear-gradient(135deg, #00e1ff, #3c00ff);
 }
 
-.income-form button:active {
-  transform: translateY(0);
-  box-shadow: 0 4px 12px rgba(13, 61, 122, 0.6);
+.income-form button:active { transform: translateY(0); }
+
+/* Hide number input spinners for a cleaner look */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+
+/* Autofill fix */
+input:-webkit-autofill,
+textarea:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+  -webkit-text-fill-color: #111827;
 }
 
-/* Table of Incomes */
-.existing-incomes-container {
-  margin: 2rem auto 3rem;
-  max-width: 1500px;
-  padding: 1.25rem 1rem; /* 20px */
-  background: #f8f9fa;
+/* Subtle custom scrollbars in case content overflows */
+.income-form::-webkit-scrollbar { width: 10px; }
+.income-form::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent), var(--accent-2));
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  overflow-x: auto; /* allow horizontal scroll on small screens */
+}
+.income-form::-webkit-scrollbar-track { background: #f3f4f6; border-radius: 8px; }
+
+/* Responsive spacing */
+@media (max-width: 768px) {
+  .add-income-container { padding: 16px; }
+  .income-form { padding: 20px 16px; }
+}
+@media (max-width: 480px) {
+  .add-income-container h2 { font-size: 1.6rem; }
+  .income-form button { font-size: 1rem; padding: 12px 14px; }
+}
+
+/* Overlay animation */
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+/* ===============================
+   Existing incomes list — floated above the overlay
+=============================== */
+.existing-incomes-container {
+  position: relative;
+  width: min(1100px, 95vw);
+  max-height: 40vh;
+  overflow: auto;
+  padding: 1.25rem 1rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+  order: 2;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0s;
 }
 
 .existing-incomes-container h3 {
   margin-bottom: 1rem;
-  font-weight: 600;
-  color: #222;
-  font-size: 2.0rem;
+  font-weight: 700;
+  color: var(--accent-dark);
+  font-size: 1.6rem;
 }
 
-.income-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1rem;
-  color: #000000;
-  min-width: 600px; /* ensures table doesn’t get too squeezed */
-}
+.income-table { width: 100%; border-collapse: collapse; font-size: 1rem; color: #000; min-width: 600px; }
 
 .income-table thead th {
-  background-color: #4caf50;
-  color: white;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: #0d1117;
   padding: 0.625rem 0.75rem;
-
   border-bottom: 2px solid #ddd;
   font-weight: 700;
   text-align: center;
 }
 
-.income-table tbody tr {
-  border-bottom: 1px solid #ddd;
-}
+.income-table tbody tr { border-bottom: 1px solid #e5e7eb; }
+.income-table tbody tr:nth-child(even) { background-color: #f2f2f2; }
+.income-table tbody td { padding: 0.625rem 0.75rem; vertical-align: middle; color: #555; font-size: 1.1rem; text-align: center; }
 
-.income-table tbody tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-.income-table tbody td {
-  padding: 0.625rem 0.75rem;
-  vertical-align: middle;
-  color: #555;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
-/* Buttons inside table cells */
 .income-table td button {
-  margin-right: 10px; /* added spacing between buttons */
+  margin-right: 10px;
   padding: 6px 14px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 700;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease;
   user-select: none;
-  outline-offset: 2px; /* for focus outline */
-  width:auto;
-}
-
-.income-table td button:focus-visible {
-  outline: 2px solid #90caf9;
   outline-offset: 2px;
+  width: auto;
 }
+.income-table td button:hover { transform: scale(1.05); filter: brightness(0.95); }
+.income-table td button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
-/* Button Colors */
-.edit-btn {
-  background-color: #1976d2;
-  color: white;
-}
+.edit-btn { background-color: #1976d2; color: white; }
+.edit-btn:hover { background-color: #115293; }
+.delete-btn { background-color: #e53935; color: white; }
+.delete-btn:hover { background-color: #ab2c28; }
+.save-btn { background-color: #43a047; color: white; }
+.save-btn:hover { background-color: #2e7d32; }
+.cancel-btn { background-color: #9e9e9e; color: white; }
+.cancel-btn:hover { background-color: #616161; }
 
-.edit-btn:hover {
-  background-color: #115293;
-}
-
-.delete-btn {
-  background-color: #e53935;
-  color: white;
-}
-
-.delete-btn:hover {
-  background-color: #ab2c28;
-}
-
-.save-btn {
-  background-color: #43a047;
-  color: white;
-}
-
-.save-btn:hover {
-  background-color: #2e7d32;
-}
-
-.cancel-btn {
-  background-color: #9e9e9e;
-  color: white;
-}
-
-.cancel-btn:hover {
-  background-color: #616161;
-}
-
-/* Input fields inside editable rows */
 .income-table tbody tr input[type="text"],
 .income-table tbody tr input[type="number"],
 .income-table tbody tr input[type="date"] {
   width: 100%;
   padding: 6px 10px;
   box-sizing: border-box;
-  font-size: 1.1rem;
+  font-size: 1rem;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
 .income-table tbody tr input[type="text"]:focus,
 .income-table tbody tr input[type="number"]:focus,
 .income-table tbody tr input[type="date"]:focus {
-  border-color: #1e88e5;
+  border-color: var(--accent-dark);
   outline: none;
-  box-shadow: 0 0 8px rgba(30, 136, 229, 0.6);
-  background-color: #f0f7ff;
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  background-color: #fffef5;
 }
 
-/* Button hover scale effect */
-.income-table td button:hover {
-  transform: scale(1.05);
+@media (max-width: 600px) {
+  .existing-incomes-container { max-height: 48vh; }
 }
 
-/* Responsive tweaks */
-@media (max-width: 480px) {
-  .add-income-container {
-    padding: 25px 20px;
-  }
+/* Interactions: when the form is hovered or focused, show only the form */
+.income-form:hover + .existing-incomes-container {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(6px) scale(0.98);
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0s linear 0.18s;
+}
 
-  .income-form {
-    gap: 1rem;
-  }
-
-  .income-form button {
-    font-size: 1.1rem;
-    padding: 0.875rem 0;
-  }
-
-  .income-table,
-  .existing-incomes-container {
-    min-width: unset; /* allow table to shrink */
-  }
-
-  .income-table th,
-  .income-table td {
-    font-size: 0.9rem;
-    padding: 0.5rem 0.6rem;
-  }
-
-  .income-table td button {
-    padding: 5px 8px;
-    font-size: 0.8rem;
-  }
+/* Darken the overlay backdrop a bit while interacting with the form */
+.add-income-container:has(.income-form:hover) {
+  background: rgba(0, 0, 0, 0.85);
 }

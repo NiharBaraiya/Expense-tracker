@@ -1,10 +1,11 @@
 // pages/AddBudget.js
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import API from '../api';
 import './AddBudget.css';  // <-- Import CSS here
+import useBodyScrollLock from "../utils/useBodyScrollLock";
 
 const AddBudget = () => {
+  useBodyScrollLock(true);
   // Budget form state
   const [form, setForm] = useState({
     id: Date.now(),
@@ -17,44 +18,15 @@ const AddBudget = () => {
     endDate: '',
   });
 
-  // Expense form state
-  const [expense, setExpense] = useState({
-    title: '',
-    amount: '',
-    date: '',
-    notes: '',
-  });
+  // No external lists needed on this screen for now
 
-  const [expenses, setExpenses] = useState([]);
-  const [budgets, setBudgets] = useState([]);
-  const navigate = useNavigate();
-
-  // Load expenses from API
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [expensesRes, budgetsRes] = await Promise.all([
-          API.get('/expenses'),
-          API.get('/budgets')
-        ]);
-        setExpenses(expensesRes.data);
-        setBudgets(budgetsRes.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
-    };
-    fetchData();
-  }, []);
+  // If budgets are needed later, re-enable fetching with state
 
   // Handle budget form changes
   const handleBudgetChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Handle expense form changes
-  const handleExpenseChange = (e) => {
-    setExpense({ ...expense, [e.target.name]: e.target.value });
-  };
 
   // Submit budget form (with override by category)
   const handleBudgetSubmit = async (e) => {
@@ -93,66 +65,6 @@ const AddBudget = () => {
     }
   };
 
-  // Submit expense form
-  const handleExpenseSubmit = async (e) => {
-    e.preventDefault();
-
-    // Get current budgets from state instead of localStorage
-    // Note: budgets state is already loaded from API
-    const budgetIndex = budgets.findIndex((b) => b.id === form.id);
-
-    if (budgetIndex === -1) {
-      alert("⚠ Budget not found!");
-      return;
-    }
-
-    const budget = budgets[budgetIndex];
-
-    // Calculate total spent for this budget
-    const totalSpent = expenses
-      .filter((exp) => exp.budgetId === budget.id)
-      .reduce((sum, exp) => sum + parseFloat(exp.amount), 0);
-
-    const newTotal = totalSpent + parseFloat(expense.amount);
-
-    if (newTotal > parseFloat(budget.amount)) {
-      if (!window.confirm(`⚠ This expense exceeds your budget (${budget.amount}). Add anyway?`)) {
-        return;
-      }
-    }
-
-    const newExpense = {
-      ...expense,
-      id: Date.now(),
-      budgetId: budget.id,
-    };
-
-    try {
-      // Send expense to backend
-      const res = await API.post('/expenses/add', newExpense);
-
-      // Update local state only
-      const updatedExpenses = [...expenses, res.data];
-      setExpenses(updatedExpenses);
-
-      alert("✅ Expense Added Successfully!");
-      console.log("Saved expense:", res.data);
-
-      navigate("/dashboard"); // redirect after adding
-
-      // Reset expense form
-      setExpense({
-        title: '',
-        amount: '',
-        date: '',
-        notes: '',
-      });
-
-    } catch (error) {
-      console.error("Error:", error);
-      alert(`❌ Failed to save expense: ${error.message}`);
-    }
-  };
 
   return (
     <div className="add-budget-container">
@@ -160,8 +72,9 @@ const AddBudget = () => {
       <form onSubmit={handleBudgetSubmit} className="budget-form">
         <h2>💼 Add Budget</h2>
 
-        <label>Budget Name</label>
+        <label htmlFor="budgetName">Budget Name</label>
         <input
+          id="budgetName"
           name="name"
           placeholder="Budget Name"
           value={form.name}
@@ -169,16 +82,18 @@ const AddBudget = () => {
           required
         />
 
-        <label>Budget Description (optional)</label>
+        <label htmlFor="budgetDesc">Budget Description (optional)</label>
         <textarea
+          id="budgetDesc"
           name="description"
           placeholder="Budget Description (optional)"
           value={form.description}
           onChange={handleBudgetChange}
         />
 
-        <label>Total Amount</label>
+        <label htmlFor="budgetAmount">Total Amount</label>
         <input
+          id="budgetAmount"
           name="amount"
           type="number"
           placeholder="Total Amount"
@@ -187,8 +102,9 @@ const AddBudget = () => {
           required
         />
 
-        <label>Currency:</label>
+        <label htmlFor="budgetCurrency">Currency:</label>
         <select
+          id="budgetCurrency"
           name="currency"
           value={form.currency}
           onChange={handleBudgetChange}
@@ -225,32 +141,34 @@ const AddBudget = () => {
           <option value="QAR">QAR (ر.ق)</option>
         </select>
 
-        <label>Category:</label>
+        <label htmlFor="budgetCategory">Category:</label>
         <select
+          id="budgetCategory"
           name="category"
           value={form.category}
           onChange={handleBudgetChange}
           required
         >
           <option value="Food">Food</option>
-          <option value="Housing">Housing</option>
+          <option value="Groceries">Groceries</option>
           <option value="Transport">Transport</option>
-          <option value="Utilities">Utilities</option>
           <option value="Entertainment">Entertainment</option>
           <option value="Healthcare">Healthcare</option>
           <option value="Education">Education</option>
-          <option value="Savings">Savings</option>
-          <option value="Travel">Travel</option>
+           <option value="Utilities">Utilities</option>
+            <option value="Electricity Bills">Electricity Bills</option>
+    
+          <option value="Internet">Internet</option>
           <option value="Clothing">Clothing</option>
-          <option value="Groceries">Groceries</option>
-          <option value="Electricity">Electricity</option>
+          <option value="Savings">Savings</option>
+         <option value="Water">Water</option>
           <option value="Dining Out">Dining Out</option>
           <option value="Fuel">Fuel</option>
           <option value="Public Transport">Public Transport</option>
+           <option value="Housing">Housing</option>
           <option value="Rent">Rent</option>
           <option value="Mortgage">Mortgage</option>
-          <option value="Water">Water</option>
-          <option value="Internet">Internet</option>
+         
           <option value="Phone">Phone</option>
           <option value="Streaming Services">Streaming Services</option>
           <option value="Movies & Events">Movies & Events</option>
@@ -283,10 +201,12 @@ const AddBudget = () => {
           <option value="Taxes">Taxes</option>
           <option value="Loan Payments">Loan Payments</option>
           <option value="Miscellaneous">Miscellaneous</option>
+          <option value="Other">Other</option>
         </select>
 
-        <label>Start Date:</label>
+        <label htmlFor="budgetStart">Start Date:</label>
         <input
+          id="budgetStart"
           name="startDate"
           type="date"
           value={form.startDate}
@@ -294,8 +214,9 @@ const AddBudget = () => {
           required
         />
 
-        <label>End Date:</label>
+        <label htmlFor="budgetEnd">End Date:</label>
         <input
+          id="budgetEnd"
           name="endDate"
           type="date"
           value={form.endDate}
